@@ -36,7 +36,10 @@ Widget _screen(BuildContext context) {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             20.height,
-            Text('Forget Password', style: kHeading2B.copyWith(fontSize: 25.sp)),
+            Text(
+              forgotPassword,
+              style: kHeading2B.copyWith(fontSize: 25.sp),
+            ),
             10.height,
             Text(enterYourValidEmail, style: kSmallTitle1),
             100.height,
@@ -49,7 +52,6 @@ Widget _screen(BuildContext context) {
             ),
             40.height,
 
-
             Obx(() {
               return CustomButton(
                 title: authController.isLoading.value ? loading : send,
@@ -57,16 +59,15 @@ Widget _screen(BuildContext context) {
                   if (authController.emailC.text.isEmpty ||
                       authController.passC.text.isEmpty) {
                     ErrorSnackbar.show(
-                      title: 'Failed',
-                      message: 'Error: Enter valid Credentials',
+                      title: failed,
+                      message: enterValidCredential,
                     );
                   } else {
-                    // authController.login();
+                    authController.forgetPassword();
                   }
                 },
               );
             }),
-
           ],
         ),
       ),

@@ -48,7 +48,7 @@ Widget _screen(BuildContext context) {
                   keyboardType: TextInputType.emailAddress,
                   hint: fullName,
                   icon: Icons.person,
-                  controller: authController.emailC,
+                  controller: authController.nameC,
                 ),
                 5.height,
                 _enterFieldText(enterYourEmail),
@@ -60,15 +60,15 @@ Widget _screen(BuildContext context) {
                 ),
                 5.height,
                 _enterFieldText(enterYourPassword),
-                CustomTextField(
-                  obscureText: true,
+                Obx(() => CustomTextField(
+                  obscureText: !authController.isTure.value,
                   keyboardType: TextInputType.text,
                   hint: password,
                   icon: Icons.lock,
-                  suffixIcon: Icons.remove_red_eye,
-                  suffixOnTap: () {},
+                  suffixIcon: authController.isTure.value ? Icons.visibility : Icons.visibility_off,
+                  suffixOnTap: authController.obscureOnTap,
                   controller: authController.passC,
-                ),
+                )),
                 20.height,
                 RichText(
                   text: TextSpan(
@@ -102,16 +102,16 @@ Widget _screen(BuildContext context) {
                 60.height,
                 Obx(() {
                   return CustomButton(
-                    title: authController.isLoading.value ? loading : login,
+                    title: authController.isLoading.value ? loading : signUp,
                     onTap: () {
                       if (authController.emailC.text.isEmpty ||
                           authController.passC.text.isEmpty) {
                         ErrorSnackbar.show(
-                          title: 'Failed',
-                          message: 'Error: Enter valid Credentials',
+                          title: failed,
+                          message: enterValidCredential,
                         );
                       } else {
-                        // authController.login();
+                        authController.signUp();
                       }
                     },
                   );

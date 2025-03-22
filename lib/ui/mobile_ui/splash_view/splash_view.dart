@@ -30,7 +30,7 @@ class _SplashViewState extends State<SplashView> {
     SharedPreferences pref = await SharedPreferences.getInstance();
     bool isLoggedIn = pref.getBool("is_login") ?? false;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Timer(const Duration(seconds: 5), () {
+      Timer(const Duration(seconds: 4), () {
         Get.offAll(() => isLoggedIn ? HomeView() : LoginView());
       });
     });
@@ -64,9 +64,11 @@ Widget _screen(BuildContext context) {
           ),
         ),
 
+        10.height,
+
         FadeOutParticle(
           curve: Curves.bounceIn,
-          duration: const Duration(seconds: 5),
+          duration: const Duration(seconds: 4),
           disappear: true,
           child: Text(
             appName,

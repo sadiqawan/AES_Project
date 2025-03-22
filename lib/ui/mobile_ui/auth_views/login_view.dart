@@ -39,9 +39,7 @@ Widget _screen(BuildContext context) {
               appLogo,
               width: Get.width,
               height: 40.h,
-              fit:
-                  BoxFit
-                      .contain,
+              fit: BoxFit.contain,
             ),
 
             // Welcome text
@@ -56,8 +54,6 @@ Widget _screen(BuildContext context) {
               textAlign: TextAlign.center,
             ),
             20.height,
-
-            // Login form
             Column(
               children: [
                 CustomTextField(
@@ -67,15 +63,15 @@ Widget _screen(BuildContext context) {
                   controller: authController.emailC,
                 ),
                 10.height,
-                CustomTextField(
-                  obscureText: true,
+                Obx(() => CustomTextField(
+                  obscureText: !authController.isTure.value,
                   keyboardType: TextInputType.text,
-                  hint: 'Password',
+                  hint: password,
                   icon: Icons.lock,
-                  suffixIcon: Icons.remove_red_eye,
-                  suffixOnTap: () {},
+                  suffixIcon: authController.isTure.value ? Icons.visibility : Icons.visibility_off,
+                  suffixOnTap: authController.obscureOnTap,
                   controller: authController.passC,
-                ),
+                )),
                 10.height,
                 Align(
                   alignment: Alignment.centerRight,
@@ -94,11 +90,11 @@ Widget _screen(BuildContext context) {
                       if (authController.emailC.text.isEmpty ||
                           authController.passC.text.isEmpty) {
                         ErrorSnackbar.show(
-                          title: 'Failed',
-                          message: 'Error: Enter valid Credentials',
+                          title: failed,
+                          message: enterValidCredential,
                         );
                       } else {
-                        // authController.login();
+                        authController.login();
                       }
                     },
                   );
@@ -111,7 +107,7 @@ Widget _screen(BuildContext context) {
                     5.width,
                     InkWell(
                       child: Text(
-                        "Sign Up",
+                        signUp,
                         style: kSmallTitle1.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
