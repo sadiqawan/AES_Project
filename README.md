@@ -1,6 +1,9 @@
-# ase
+# Azure Engineering Company 
 
 A new Flutter project.
+Daily Data Flow Management
+Firebase as a BackEnd
+
 
 ## Getting Started
 

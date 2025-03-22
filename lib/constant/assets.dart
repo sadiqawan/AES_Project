@@ -1,0 +1,1 @@
+const appLogo = 'assets/images/c_logo.png';
