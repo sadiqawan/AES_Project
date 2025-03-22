@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
     return Sizer(
       builder: (context, orientation, screenType) {
         return GetMaterialApp(
-          debugShowCheckedModeBanner: false, // Remove debug banner
+          debugShowCheckedModeBanner: true,
           title: 'ASE',
           theme: ThemeData(
             fontFamily: GoogleFonts.poppins().fontFamily,

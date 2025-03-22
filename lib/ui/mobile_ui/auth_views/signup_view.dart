@@ -9,6 +9,7 @@ import 'package:sizer/sizer.dart';
 import '../../../constant/const_style.dart';
 import '../../../constant/cont_text.dart';
 import '../../../widgets/costum_button.dart';
+import '../../../widgets/custom_snakBar.dart';
 import '../../../widgets/custom_textfield.dart';
 
 class SignupView extends StatefulWidget {
@@ -45,7 +46,7 @@ Widget _screen(BuildContext context) {
                 _enterFieldText(enterYourName),
                 CustomTextField(
                   keyboardType: TextInputType.emailAddress,
-                  hint: 'Full Name',
+                  hint: fullName,
                   icon: Icons.person,
                   controller: authController.emailC,
                 ),
@@ -53,7 +54,7 @@ Widget _screen(BuildContext context) {
                 _enterFieldText(enterYourEmail),
                 CustomTextField(
                   keyboardType: TextInputType.emailAddress,
-                  hint: 'Email',
+                  hint: email,
                   icon: Icons.person,
                   controller: authController.emailC,
                 ),
@@ -62,7 +63,7 @@ Widget _screen(BuildContext context) {
                 CustomTextField(
                   obscureText: true,
                   keyboardType: TextInputType.text,
-                  hint: 'Password',
+                  hint: password,
                   icon: Icons.lock,
                   suffixIcon: Icons.remove_red_eye,
                   suffixOnTap: () {},
@@ -105,11 +106,9 @@ Widget _screen(BuildContext context) {
                     onTap: () {
                       if (authController.emailC.text.isEmpty ||
                           authController.passC.text.isEmpty) {
-                        Get.snackbar(
-                          'Failed',
-                          'Error: Enter valid Credentials',
-                          snackPosition: SnackPosition.TOP,
-                          backgroundColor: Colors.red.withOpacity(.3),
+                        ErrorSnackbar.show(
+                          title: 'Failed',
+                          message: 'Error: Enter valid Credentials',
                         );
                       } else {
                         // authController.login();
@@ -122,7 +121,7 @@ Widget _screen(BuildContext context) {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text('Already have an account!', style: kSmallTitle1),
-                   5.width,
+                    5.width,
                     InkWell(
                       child: Text(
                         "Login here",
@@ -140,12 +139,11 @@ Widget _screen(BuildContext context) {
         ),
       ),
     ),
-
   );
-
 }
-Widget _enterFieldText(String title){
-  return  Padding(
+
+Widget _enterFieldText(String title) {
+  return Padding(
     padding: EdgeInsets.symmetric(vertical: 1.h),
     child: Align(
       alignment: Alignment.centerLeft,

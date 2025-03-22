@@ -4,12 +4,14 @@ import 'package:ase/extensions/size_box.dart';
 import 'package:ase/ui/mobile_ui/auth_views/auth_vm.dart';
 import 'package:ase/ui/mobile_ui/auth_views/forgot_view.dart';
 import 'package:ase/ui/mobile_ui/auth_views/signup_view.dart';
+import 'package:ase/widgets/custom_snakBar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import '../../../constant/cont_text.dart';
 import '../../../widgets/costum_button.dart';
 import '../../../widgets/custom_textfield.dart';
+
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
 
@@ -35,11 +37,11 @@ Widget _screen(BuildContext context) {
             // Image with fixed size
             Image.asset(
               appLogo,
-              width: Get.width, // Adjust width as needed
-              height: 40.h, // Adjust height as needed
+              width: Get.width,
+              height: 40.h,
               fit:
                   BoxFit
-                      .contain, // Ensures the image fits within the given dimensions
+                      .contain,
             ),
 
             // Welcome text
@@ -91,11 +93,9 @@ Widget _screen(BuildContext context) {
                     onTap: () {
                       if (authController.emailC.text.isEmpty ||
                           authController.passC.text.isEmpty) {
-                        Get.snackbar(
-                          'Failed',
-                          'Error: Enter valid Credentials',
-                          snackPosition: SnackPosition.TOP,
-                          backgroundColor: Colors.red.withOpacity(.3),
+                        ErrorSnackbar.show(
+                          title: 'Failed',
+                          message: 'Error: Enter valid Credentials',
                         );
                       } else {
                         // authController.login();
