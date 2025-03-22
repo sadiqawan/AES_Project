@@ -6,6 +6,7 @@ import 'package:ase/constant/cont_text.dart';
 import 'package:ase/extensions/size_box.dart';
 import 'package:ase/ui/mobile_ui/auth_views/login_view.dart';
 import 'package:ase/ui/mobile_ui/dashbord_views/home_view/home_view.dart';
+import 'package:ase/ui/mobile_ui/dashbord_views/navigation_view.dart';
 import 'package:fade_out_particle/fade_out_particle.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -31,7 +32,7 @@ class _SplashViewState extends State<SplashView> {
     bool isLoggedIn = pref.getBool("is_login") ?? false;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Timer(const Duration(seconds: 4), () {
-        Get.offAll(() => isLoggedIn ? HomeView() : LoginView());
+        Get.offAll(() => isLoggedIn ? NavigationView() : LoginView());
       });
     });
   }
