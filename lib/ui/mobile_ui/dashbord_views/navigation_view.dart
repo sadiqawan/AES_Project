@@ -11,7 +11,7 @@ import '../../../app_controller/app_controller.dart';
 class NavigationView extends StatelessWidget {
   NavigationView({super.key});
 
-  final AppController appController = Get.put(AppController()); // Moved inside the class
+  final AppController appController = Get.put(AppController());
   final NotchBottomBarController _controller = NotchBottomBarController(index: 0);
 
   final List<Widget> bottomBarPages = [
