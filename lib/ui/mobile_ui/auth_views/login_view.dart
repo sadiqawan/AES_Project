@@ -10,7 +10,6 @@ import 'package:sizer/sizer.dart';
 import '../../../constant/cont_text.dart';
 import '../../../widgets/costum_button.dart';
 import '../../../widgets/custom_textfield.dart';
-
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
 

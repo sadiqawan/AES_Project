@@ -1,6 +1,11 @@
 const appName = 'A Z O U R E';
 const login = 'Log In';
 const signUp = 'Sign Up';
+const register = 'Register';
+const enterYourName = 'Enter your name';
+const enterYourEmail = 'Enter your email';
+const enterYourPassword = 'Enter your password';
+const createNewAccount = 'Create your new account';
 const loading = 'Loading...';
 const forgotPassword = 'Forgot Password?';
 const welcomeBack = 'Welcome Back';
