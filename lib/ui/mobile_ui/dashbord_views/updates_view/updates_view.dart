@@ -5,6 +5,17 @@ class UpdatesView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return _screen(context);
   }
+}
+Widget _screen(BuildContext context){
+  return Scaffold(
+    appBar: AppBar(
+      centerTitle: true,
+      title: Text('Updates'),
+    ),
+    body: Center(
+      child: Text('Coming Soon..'),
+    ),
+  );
 }

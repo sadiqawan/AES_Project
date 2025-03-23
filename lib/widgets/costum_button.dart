@@ -10,6 +10,7 @@ class CustomButton extends StatelessWidget {
   final double? width;
   final VoidCallback onTap;
   final Color? color;
+  final TextStyle? btnStyle;
 
   const CustomButton(
       {super.key,
@@ -17,7 +18,8 @@ class CustomButton extends StatelessWidget {
         this.width,
         this.height,
         required this.onTap,
-        this.color});
+        this.color,
+        this.btnStyle});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +35,7 @@ class CustomButton extends StatelessWidget {
         child: Center(
             child: Text(
                 title,
-                style:kSubTitle2B
+                style: btnStyle ?? kSubTitle2B
             )),
       ),
     );

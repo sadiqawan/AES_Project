@@ -35,8 +35,6 @@ Widget _screen(BuildContext context) {
       padding: EdgeInsets.symmetric(horizontal: 5.w),
       child: Column(
         children: [
-
-
           20.height,
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -55,7 +53,6 @@ Widget _screen(BuildContext context) {
             ],
           ),
           10.height,
-
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [

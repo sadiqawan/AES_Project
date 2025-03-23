@@ -27,7 +27,7 @@ Widget _screen(BuildContext context) {
     appBar: AppBar(),
     body: Column(
       children: [
-        10.height,
+        5.height,
         Text('PROFILE', style: kHeading2B),
         StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
           stream: profileViewController.getUserDataStream(),
@@ -164,15 +164,16 @@ Widget _screen(BuildContext context) {
                   onTap: () {
                     Get.bottomSheet(
                       backgroundColor: kWhite,
-                      SizedBox(
-                        height: 200,
-                        child: Padding(
-                          padding: const EdgeInsets.all(4.0),
+                      Padding(
+                        padding:  EdgeInsets.all( 4.w),
+                        child: SizedBox(
+                          height: 30.h,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text('Update Your Pic', style: kHeading2B),
-                              const SizedBox(height: 10),
+                              Text('Update Your Pic', style: kHeading2B.copyWith(fontSize: 24.sp)
+                              ),
+                            Spacer(),
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
@@ -180,6 +181,7 @@ Widget _screen(BuildContext context) {
                                   Flexible(
                                     child: CustomButton(
                                       title: 'Select Camera',
+                                      btnStyle: kSmallTitle1,
                                       onTap: () {
                                         profileViewController.pickImageFrom(
                                           ImageSource.camera,
@@ -188,10 +190,11 @@ Widget _screen(BuildContext context) {
                                       },
                                     ),
                                   ),
-                                  SizedBox(width: 5.w),
+                                5.width,
                                   Flexible(
                                     child: CustomButton(
                                       title: 'Select Gallery',
+                                      btnStyle: kSmallTitle1,
                                       onTap: () {
                                         profileViewController.pickImageFrom(
                                           ImageSource.gallery,

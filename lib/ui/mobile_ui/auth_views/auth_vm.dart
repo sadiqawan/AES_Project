@@ -1,6 +1,7 @@
 import 'package:ase/constant/cont_text.dart';
 import 'package:ase/ui/mobile_ui/auth_views/login_view.dart';
 import 'package:ase/ui/mobile_ui/dashbord_views/home_view/home_view.dart';
+import 'package:ase/ui/mobile_ui/dashbord_views/navigation_view.dart';
 import 'package:ase/widgets/custom_snakBar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -61,11 +62,11 @@ class AuthController extends GetxController {
           .collection('users')
           .doc(_auth.currentUser!.uid)
           .set({
-        'time': DateTime.now(),
-        'name': nameC.text.trim(),
-        'email': emailC.text.trim(),
-        'picture': null,
-      });
+            'time': DateTime.now(),
+            'name': nameC.text.trim(),
+            'email': emailC.text.trim(),
+            'picture': null,
+          });
 
       SuccessSnackbar.show(
         title: 'Success',
@@ -98,8 +99,7 @@ class AuthController extends GetxController {
       final SharedPreferences pref = await SharedPreferences.getInstance();
       await pref.setBool("is_login", true);
       SuccessSnackbar.show(title: 'Success', message: 'Logged in successfully');
-      Get.offAll(HomeView());
-
+      Get.offAll(NavigationView());
     } catch (e) {
       ErrorSnackbar.show(title: 'Error', message: e.toString());
     } finally {

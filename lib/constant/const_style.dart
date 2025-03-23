@@ -9,7 +9,7 @@ var kHeading1 = GoogleFonts.poppins(
   color: Colors.black,
 );
 var kHeading2B = GoogleFonts.poppins(
-  fontSize: 28.sp,
+  fontSize: 25.sp,
   fontWeight: FontWeight.w700,
   color: kSecondaryColor,
 );
