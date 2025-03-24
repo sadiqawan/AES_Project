@@ -3,9 +3,11 @@ import 'package:ase/constant/cont_text.dart';
 import 'package:ase/extensions/size_box.dart';
 import 'package:ase/widgets/card_button.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import '../../../../constant/const_style.dart';
 import '../../../../widgets/userImageGet.dart';
+import 'ex_routs/stock_history_routs/stock_history_ex_1.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -37,7 +39,7 @@ Widget _screen(BuildContext context) {
               child: Image.asset(
                 appLogo,
                 height: 20.h,
-                width: 30.w,
+                width: 35.w,
                 fit: BoxFit.cover,
               ),
             ),
@@ -45,7 +47,9 @@ Widget _screen(BuildContext context) {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 CardButton(
-                  onTap: () {},
+                  onTap: (){
+                    Get.to(()=>StockHistoryEx1());
+                  },
                   icon: Icons.access_alarm,
                   title: stockHistory,
                 ),
@@ -62,8 +66,7 @@ Widget _screen(BuildContext context) {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 CardButton(
-                  onTap: () {
-                  },
+                  onTap: () {},
                   icon: Icons.download,
                   title: stockSummary,
                 ),

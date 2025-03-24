@@ -7,7 +7,6 @@ import 'package:ase/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
-
 import '../../../../constant/assets.dart';
 import '../../../../constant/cont_text.dart';
 
@@ -33,7 +32,6 @@ Widget _screen(BuildContext context) {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               5.height,
-
               Center(
                 child: Image.asset(
                   personLogo,
@@ -105,6 +103,14 @@ Widget _screen(BuildContext context) {
               ),
               10.height,
               _inPut(
+                modelNo,
+                model,
+                controller.modelC,
+                Icons.segment_rounded,
+                false,
+              ),
+              10.height,
+              _inPut(
                 enterCost,
                 cost,
                 controller.costC,
@@ -126,25 +132,20 @@ Widget _screen(BuildContext context) {
               // Date Picker Button with Correct Obx Implementation
               CustomButton(
                 title:
-                    controller.selectedTimeOn.value
-                        ? onTapSelectedDate
-                        : (controller.selectedDate!.value.isNotEmpty
-                            ? controller.selectedDate!.value
-                            : onTapSelectedDate), // Display default if not selected
+                    controller.selectedDate.value.isNotEmpty
+                        ? controller.selectedDate.value
+                        : onTapSelectedDate,
                 onTap: () => controller.pickDate(context),
                 btnStyle: kSmallTitle1.copyWith(fontSize: 17.sp),
               ),
-
               20.height,
-
               CustomButton(
                 title: controller.isLoading.value ? submitting : submit,
                 onTap: () {
                   controller.updateAllHistory();
                 },
               ),
-
-              130.height,
+              120.height,
             ],
           ),
         ),

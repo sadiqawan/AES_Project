@@ -12,6 +12,7 @@ class AddItemController extends GetxController {
   TextEditingController nameC = TextEditingController();
   TextEditingController serialNoC = TextEditingController();
   TextEditingController costC = TextEditingController();
+  TextEditingController modelC = TextEditingController();
   TextEditingController quantityC = TextEditingController();
 
   RxString selectedItem = ''.obs;
@@ -50,6 +51,10 @@ class AddItemController extends GetxController {
       ErrorSnackbar.show(title: failed, message: pleaseEnterSerialNo);
       return false;
     }
+    if (modelC.text.trim().isEmpty) {
+      ErrorSnackbar.show(title: failed, message: pleaseEnterModelNo);
+      return false;
+    }
     if (costC.text.trim().isEmpty ||
         double.tryParse(costC.text.trim()) == null) {
       ErrorSnackbar.show(title: failed, message: pleaseEnterCostOfItem);
@@ -80,6 +85,7 @@ class AddItemController extends GetxController {
     final serial = serialNoC.text.trim();
     final cost = costC.text.trim();
     final quantity = quantityC.text.trim();
+    final model = modelC.text.trim();
 
     try {
       DocumentSnapshot userDoc =
@@ -106,6 +112,7 @@ class AddItemController extends GetxController {
             'itemType': list[itemSelectIndex.value],
             'itemName': name,
             'serialNo': serial,
+            'modelNo': model,
             'itemCost': cost,
             'itemQuantity': quantity,
             'entryDate': selectedDate.value,
@@ -121,6 +128,7 @@ class AddItemController extends GetxController {
             'itemType': list[itemSelectIndex.value],
             'itemName': name,
             'serialNo': serial,
+            'modelNo': model,
             'itemCost': cost,
             'itemQuantity': quantity,
             'entryDate': selectedDate.value,
@@ -134,6 +142,7 @@ class AddItemController extends GetxController {
       serialNoC.clear();
       costC.clear();
       quantityC.clear();
+      modelC.clear();
       selectedItem.value = '';
       selectedDate.value = '';
       itemSelectIndex.value = -1;
