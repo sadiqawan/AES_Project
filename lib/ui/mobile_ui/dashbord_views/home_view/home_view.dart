@@ -76,6 +76,7 @@ Widget _screen(BuildContext context) {
                 ),
               ],
             ),
+            100.height
           ],
         ),
       ),

@@ -30,7 +30,7 @@ class CustomTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: Get.width,
-      height: 8.h,
+      height: 9.h,
       alignment: Alignment.center,
       padding: EdgeInsets.all(8.sp),
       decoration: BoxDecoration(
@@ -52,7 +52,7 @@ class CustomTextField extends StatelessWidget {
             minWidth: 15.w,
             minHeight: 15.w,
           ),
-          hintStyle: kSmallTitle1,
+          hintStyle: kSmallTitle1.copyWith(color: kBlack.withOpacity(.4)),
           contentPadding: EdgeInsets.symmetric(vertical: 2.h),
         ),
       ),

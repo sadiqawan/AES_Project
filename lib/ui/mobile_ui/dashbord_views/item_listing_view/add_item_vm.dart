@@ -117,6 +117,8 @@ class AddItemController extends GetxController {
             'itemQuantity': quantity,
             'entryDate': selectedDate.value,
             'entryBy': entryBy,
+            'status': 'Added',
+
           });
 
       await fireStore
@@ -133,6 +135,7 @@ class AddItemController extends GetxController {
             'itemQuantity': quantity,
             'entryDate': selectedDate.value,
             'entryBy': entryBy,
+            'status': 'Added',
           });
 
       SuccessSnackbar.show(title: success, message: itemAddedSuccessfully);

@@ -54,7 +54,7 @@ Widget _screen(BuildContext context) {
                 padding: EdgeInsets.symmetric(vertical: 3.h),
                 hint: Text(
                   selectItem,
-                  style: kSmallTitle1.copyWith(fontSize: 16.sp),
+                  style: kSmallTitle1.copyWith(fontSize: 14.sp),
                 ),
                 value: controller.selectedItem.value.isEmpty ? null : controller.selectedItem.value,
                 items: controller.list.map((String value) {
@@ -106,9 +106,9 @@ Widget _screen(BuildContext context) {
               CustomButton(
                 title: controller.selectedDate.value.isNotEmpty ? controller.selectedDate.value : onTapSelectedDate,
                 onTap: () => controller.pickDate(context),
-                btnStyle: kSmallTitle1.copyWith(fontSize: 17.sp),
+                btnStyle: kSmallTitle1.copyWith(fontSize: 16.sp),
               ),
-              20.height,
+              30.height,
               CustomButton(
                 title: controller.isLoading.value ? submitting : submit,
                 onTap: () {
