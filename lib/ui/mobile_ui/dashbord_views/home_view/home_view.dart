@@ -24,12 +24,13 @@ class _HomeViewState extends State<HomeView> {
 }
 
 Widget _screen(BuildContext context) {
+  final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+
   return Scaffold(
     appBar: AppBar(
       leading: userImage(),
-      title: Text(welcome, style: kSubTitle2B),
+      title: Text(welcome, style: kSubTitle2B.copyWith(fontSize: 16.sp)),
     ),
-
     body: Padding(
       padding: EdgeInsets.symmetric(horizontal: 5.w),
       child: SingleChildScrollView(
@@ -38,39 +39,36 @@ Widget _screen(BuildContext context) {
             Center(
               child: Image.asset(
                 appLogo,
-                height: 20.h,
-                width: 35.w,
-                fit: BoxFit.cover,
+                height: isLandscape ? 50.h : 25.h,  // Adjust height in landscape mode
+                width: isLandscape ? 30.w : 45.w,
+                fit: BoxFit.fill,
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            5.height,
+            GridView.count(
+              physics: NeverScrollableScrollPhysics(),
+              crossAxisCount: isLandscape ? 4 : 2,
+              mainAxisSpacing: 5,
+              crossAxisSpacing: 5,
+              shrinkWrap: true,
               children: [
                 CardButton(
-                  onTap: (){
-                    Get.to(()=>StockHistoryEx1());
+                  onTap: () {
+                    Get.to(() => StockHistoryEx1());
                   },
                   icon: Icons.access_alarm,
                   title: stockHistory,
                 ),
-                10.width,
                 CardButton(
                   onTap: () {},
                   icon: Icons.list_alt_rounded,
                   title: stockAvailable,
                 ),
-              ],
-            ),
-            10.height,
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
                 CardButton(
                   onTap: () {},
                   icon: Icons.download,
                   title: stockSummary,
                 ),
-                10.width,
                 CardButton(
                   onTap: () {},
                   icon: Icons.recycling,

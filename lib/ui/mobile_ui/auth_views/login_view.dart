@@ -22,107 +22,133 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
-    return _screen(context);
-  }
-}
+    return Scaffold(
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          bool isLandscape = constraints.maxWidth > 600;
+          return SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: isLandscape ? 10.w : 5.w,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(height: isLandscape ? 5.h : 8.h),
 
-Widget _screen(BuildContext context) {
-  AuthController authController = Get.put(AuthController());
-  return Scaffold(
-    body: SingleChildScrollView(
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 2.w),
-        child: Column(
-          children: [
-            // Image with fixed size
-            Image.asset(
-              appLogo,
-              width: Get.width,
-              height: 40.h,
-              fit: BoxFit.contain,
-            ),
-
-            // Welcome text
-            Text(
-              welcomeBack,
-              style: kHeading2B.copyWith(fontSize: 25.sp),
-              textAlign: TextAlign.center,
-            ),
-            Text(
-              loginIntoYourAccount,
-              style: kSmallTitle1,
-              textAlign: TextAlign.center,
-            ),
-            20.height,
-            Column(
-              children: [
-                CustomTextField(
-                  keyboardType: TextInputType.emailAddress,
-                  hint: 'Email',
-                  icon: Icons.person,
-                  controller: authController.emailC,
-                ),
-                10.height,
-                Obx(() => CustomTextField(
-                  obscureText: !authController.isTure.value,
-                  keyboardType: TextInputType.text,
-                  hint: password,
-                  icon: Icons.lock,
-                  suffixIcon: authController.isTure.value ? Icons.visibility : Icons.visibility_off,
-                  suffixOnTap: authController.obscureOnTap,
-                  controller: authController.passC,
-                )),
-                10.height,
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: InkWell(
-                    child: Text(forgotPassword, style: kSmallTitle1),
-                    onTap: () {
-                      Get.to(() => const ForgotView());
-                    },
+                  // Logo Image
+                  Image.asset(
+                    appLogo,
+                    width: isLandscape ? 35.w : 80.w,
+                    height: isLandscape ? 25.h : 35.h,
+                    fit: BoxFit.contain,
                   ),
-                ),
-                15.height,
-                Obx(() {
-                  return CustomButton(
-                    title: authController.isLoading.value ? loading : login,
-                    onTap: () {
-                      if (authController.emailC.text.isEmpty ||
-                          authController.passC.text.isEmpty) {
-                        ErrorSnackbar.show(
-                          title: failed,
-                          message: enterValidCredential,
-                        );
-                      } else {
-                        authController.login();
-                      }
-                    },
-                  );
-                }),
-                30.height,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('Don\'t have an account?', style: kSmallTitle1),
-                    5.width,
-                    InkWell(
-                      child: Text(
-                        signUp,
-                        style: kSmallTitle1.copyWith(
-                          fontWeight: FontWeight.bold,
+
+                  5.height,
+
+                  // Welcome Text
+                  Text(
+                    welcomeBack,
+                    style: kHeading2B.copyWith(
+                      fontSize: isLandscape ? 20.sp : 25.sp,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  Text(
+                    loginIntoYourAccount,
+                    style: kSmallTitle1,
+                    textAlign: TextAlign.center,
+                  ),
+
+                  15.height,
+
+                  // Form Fields
+                  Column(
+                    children: [
+                      CustomTextField(
+                        keyboardType: TextInputType.emailAddress,
+                        hint: 'Email',
+                        icon: Icons.person,
+                        controller: Get.put(AuthController()).emailC,
+                      ),
+                      10.height,
+                      Obx(
+                        () => CustomTextField(
+                          obscureText: !Get.find<AuthController>().isTure.value,
+                          keyboardType: TextInputType.text,
+                          hint: password,
+                          icon: Icons.lock,
+                          suffixIcon:
+                              Get.find<AuthController>().isTure.value
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                          suffixOnTap: Get.find<AuthController>().obscureOnTap,
+                          controller: Get.find<AuthController>().passC,
                         ),
                       ),
-                      onTap: () {
-                        Get.to(() => const SignupView());
-                      },
-                    ),
-                  ],
-                ),
-              ],
+                      10.height,
+
+                      // Forgot Password
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: InkWell(
+                          child: Text(forgotPassword, style: kSmallTitle1),
+                          onTap: () => Get.to(() => const ForgotView()),
+                        ),
+                      ),
+                      15.height,
+
+                      // Login Button
+                      Obx(() {
+                        return CustomButton(
+                          title:
+                              Get.find<AuthController>().isLoading.value
+                                  ? loading
+                                  : login,
+                          onTap: () {
+                            final authController = Get.find<AuthController>();
+                            if (authController.emailC.text.isEmpty ||
+                                authController.passC.text.isEmpty) {
+                              ErrorSnackbar.show(
+                                title: failed,
+                                message: enterValidCredential,
+                              );
+                            } else {
+                              authController.login();
+                            }
+                          },
+                        );
+                      }),
+
+                      20.height,
+
+                      // Sign-Up Option
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('Don\'t have an account?', style: kSmallTitle1),
+                          2.width,
+                          Flexible(
+                            child: InkWell(
+                              child: Text(
+                                signUp,
+                                style: kSmallTitle1.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              onTap: () => Get.to(() => const SignupView()),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
+          );
+        },
       ),
-    ),
-  );
+    );
+  }
 }

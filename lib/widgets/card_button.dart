@@ -19,30 +19,43 @@ class CardButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Flexible(
-      child: InkWell(
-        onTap: onTap,
-        child: Container(
-          height: 25.h,
-          width: 45.w,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(25.sp),
-            color: kSecondaryColor,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        bool isLandscape = constraints.maxWidth > 600;
+
+        return InkWell(
+          onTap: onTap,
+          child: Container(
+            height: isLandscape ? 20.h : 25.h,
+            width: isLandscape ? 40.w : 45.w,
+            padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 3.w),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20.sp),
+              color: kSecondaryColor,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 8,
+                  spreadRadius: 2,
+                  offset: Offset(0, 4),
+                )
+              ],
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(icon, color: kBlack, size: isLandscape ? 25.sp : 30.sp),
+                5.height,
+                Text(
+                  title,
+                  style: kSubTitle2B.copyWith(fontSize: isLandscape ? 14.sp : 16.sp),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(icon, color: kBlack, size: 30.sp),
-              5.height,
-              Text(
-                title,
-                style: kSubTitle2B.copyWith(),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

@@ -6,6 +6,7 @@ import 'package:ase/ui/mobile_ui/dashbord_views/profile_view/profile_view.dart';
 import 'package:ase/ui/mobile_ui/dashbord_views/updates_view/updates_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sizer/sizer.dart';
 import '../../../app_controller/app_controller.dart';
 
 class NavigationView extends StatelessWidget {
@@ -44,10 +45,10 @@ class NavigationView extends StatelessWidget {
         kBottomRadius: 28.0,
         notchColor: kSecondaryColor,
         removeMargins: false,
-        bottomBarWidth: 500,
+        bottomBarWidth: Get.width,
         showShadow: true,
         durationInMilliSeconds: 300,
-        itemLabelStyle: const TextStyle(fontSize: 10),
+        itemLabelStyle: TextStyle(fontSize: 14.sp),
         elevation: 2,
         kIconSize: 24.0,
         bottomBarItems: [

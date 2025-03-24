@@ -21,6 +21,7 @@ class AddItemView extends StatelessWidget {
 
 Widget _screen(BuildContext context) {
   AddItemController controller = Get.put(AddItemController());
+  final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
 
   return Scaffold(
     appBar: AppBar(centerTitle: true, title: const Text(listItem)),
@@ -28,15 +29,15 @@ Widget _screen(BuildContext context) {
       padding: EdgeInsets.symmetric(horizontal: 5.w),
       child: SingleChildScrollView(
         child: Obx(
-          () => Column(
+              () => Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               5.height,
               Center(
                 child: Image.asset(
                   personLogo,
-                  height: 10.h,
-                  width: 20.w,
+                  height: isLandscape ? 30.h : 10.h,
+                  width: isLandscape ? 15.w : 20.w,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -47,94 +48,63 @@ Widget _screen(BuildContext context) {
               ),
               5.height,
 
-              // Wrap Dropdown in Obx to make it reactive
+              // Dropdown
               DropdownButtonFormField<String>(
                 dropdownColor: kSecondaryColor,
-                padding: EdgeInsets.symmetric(vertical: 2.h),
+                padding: EdgeInsets.symmetric(vertical: 3.h),
                 hint: Text(
                   selectItem,
-                  style: kSmallTitle1.copyWith(fontSize: 17.sp),
+                  style: kSmallTitle1.copyWith(fontSize: 16.sp),
                 ),
-                value:
-                    controller.selectedItem.value.isEmpty
-                        ? null
-                        : controller.selectedItem.value,
-                items:
-                    controller.list.map((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
+                value: controller.selectedItem.value.isEmpty ? null : controller.selectedItem.value,
+                items: controller.list.map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
                 onChanged: (String? value) {
                   if (value != null) {
                     controller.selectedItem.value = value;
-                    controller.itemSelectIndex!.value = controller.list.indexOf(
-                      value,
-                    );
+                    controller.itemSelectIndex!.value = controller.list.indexOf(value);
                   }
                 },
                 decoration: InputDecoration(
-                  iconColor: kSecondaryColor,
                   fillColor: kSecondaryColor,
-                  focusColor: kSecondaryColor,
-                  hoverColor: kWhite,
                   filled: true,
                   border: OutlineInputBorder(),
                   contentPadding: EdgeInsets.symmetric(horizontal: 5.w),
                 ),
               ),
-
               8.height,
-              _inPut(
-                enterItemName,
-                name,
-                controller.nameC,
-                Icons.insert_invitation_outlined,
-                false,
+
+              // Responsive Form Fields
+              isLandscape
+                  ? Row(
+                children: [
+                  Expanded(child: _inPut(enterItemName, name, controller.nameC, Icons.insert_invitation_outlined, false)),
+                  5.width,
+                  Expanded(child: _inPut(enterSerialNo, sNo, controller.serialNoC, Icons.segment_rounded, false)),
+                ],
+              )
+                  : Column(
+                children: [
+                  _inPut(enterItemName, name, controller.nameC, Icons.insert_invitation_outlined, false),
+                  10.height,
+                  _inPut(enterSerialNo, sNo, controller.serialNoC, Icons.segment_rounded, false),
+                ],
               ),
               10.height,
-              _inPut(
-                enterSerialNo,
-                sNo,
-                controller.serialNoC,
-                Icons.segment_rounded,
-                false,
-              ),
+              _inPut(modelNo, model, controller.modelC, Icons.segment_rounded, false),
               10.height,
-              _inPut(
-                modelNo,
-                model,
-                controller.modelC,
-                Icons.segment_rounded,
-                false,
-              ),
+              _inPut(enterCost, cost, controller.costC, Icons.monetization_on_rounded, true),
               10.height,
-              _inPut(
-                enterCost,
-                cost,
-                controller.costC,
-                Icons.monetization_on_rounded,
-                true,
-              ),
-              10.height,
-              _inPut(
-                enterQuantity,
-                quantity,
-                controller.quantityC,
-                Icons.confirmation_number_outlined,
-                true,
-              ),
+              _inPut(enterQuantity, quantity, controller.quantityC, Icons.confirmation_number_outlined, true),
               10.height,
               Text(dateOfEntry, style: kSmallTitle1.copyWith(fontSize: 17.sp)),
               5.height,
-
-              // Date Picker Button with Correct Obx Implementation
               CustomButton(
-                title:
-                    controller.selectedDate.value.isNotEmpty
-                        ? controller.selectedDate.value
-                        : onTapSelectedDate,
+                title: controller.selectedDate.value.isNotEmpty ? controller.selectedDate.value : onTapSelectedDate,
                 onTap: () => controller.pickDate(context),
                 btnStyle: kSmallTitle1.copyWith(fontSize: 17.sp),
               ),
@@ -154,13 +124,7 @@ Widget _screen(BuildContext context) {
   );
 }
 
-Widget _inPut(
-  String title,
-  String hint,
-  TextEditingController controller,
-  IconData icon,
-  bool keyBordTypeNumber,
-) {
+Widget _inPut(String title, String hint, TextEditingController controller, IconData icon, bool keyBordTypeNumber) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -169,8 +133,7 @@ Widget _inPut(
         hint: hint,
         controller: controller,
         icon: icon,
-        keyboardType:
-            keyBordTypeNumber ? TextInputType.number : TextInputType.text,
+        keyboardType: keyBordTypeNumber ? TextInputType.number : TextInputType.text,
       ),
     ],
   );

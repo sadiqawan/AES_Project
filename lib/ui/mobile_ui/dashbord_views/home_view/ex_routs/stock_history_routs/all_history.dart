@@ -14,10 +14,11 @@ class _AllHistoryViewState extends State<AllHistoryView> {
   }
 }
 
-Widget _screen(BuildContext context){
+Widget _screen(BuildContext context) {
   return Scaffold(
-    appBar: AppBar(
-      title: Text('All History'),
-    ),
+    appBar: AppBar(title: Text('All History')),
+    body: Column(children: [
+
+    ]),
   );
 }

@@ -46,7 +46,7 @@ class CustomTextField extends StatelessWidget {
         decoration: InputDecoration(
           border: InputBorder.none,
           hintText: hint,
-          prefixIcon: Icon(icon, size: 25.sp),
+          prefixIcon: Icon(icon, size: 20.sp),
           suffixIcon: IconButton(onPressed: suffixOnTap, icon: Icon(suffixIcon)),
           prefixIconConstraints: BoxConstraints(
             minWidth: 15.w,
