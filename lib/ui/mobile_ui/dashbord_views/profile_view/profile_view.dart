@@ -151,7 +151,7 @@ Widget _screen(BuildContext context) {
                           color: kBlack,
                           shape: BoxShape.circle,
                           image: DecorationImage(
-                            image: NetworkImage(userData!['picture']),
+                            image: NetworkImage(userData['picture']),
                             fit: BoxFit.cover,
                           ),
                           border: Border.all(color: kBlack, width: 5),
@@ -220,8 +220,8 @@ Widget _screen(BuildContext context) {
                   ),
                 ),
                 10.height,
-                _widget(Icons.person_outline, userData?['name'] ?? 'No Name'),
-                _widget(Icons.email_outlined, userData?['email'] ?? 'No Email'),
+                _widget(Icons.person_outline, userData['name'] ?? 'No Name'),
+                _widget(Icons.email_outlined, userData['email'] ?? 'No Email'),
                 _widget(
                   Icons.watch_later_outlined,
                   time != null ? format.format(time) : 'No Time',

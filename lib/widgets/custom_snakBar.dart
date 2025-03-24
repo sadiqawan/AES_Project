@@ -9,7 +9,7 @@ class ErrorSnackbar {
     required String message,
     Color backgroundColor = Colors.red,
     SnackPosition position = SnackPosition.TOP,
-    IconData icon = Icons.face,
+    IconData icon = Icons.running_with_errors,
   }) {
     Get.snackbar(
       title,
@@ -31,7 +31,7 @@ class SuccessSnackbar {
     required String message,
     Color backgroundColor = Colors.green,
     SnackPosition position = SnackPosition.TOP,
-    IconData icon = Icons.face,
+    IconData icon = Icons.check_box,
   }) {
     Get.snackbar(
       title,

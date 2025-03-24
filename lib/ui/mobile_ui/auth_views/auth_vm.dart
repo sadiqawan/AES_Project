@@ -1,6 +1,5 @@
 import 'package:ase/constant/cont_text.dart';
 import 'package:ase/ui/mobile_ui/auth_views/login_view.dart';
-import 'package:ase/ui/mobile_ui/dashbord_views/home_view/home_view.dart';
 import 'package:ase/ui/mobile_ui/dashbord_views/navigation_view.dart';
 import 'package:ase/widgets/custom_snakBar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -11,7 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthController extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
+  final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
 
   final emailC = TextEditingController();
   final passC = TextEditingController();

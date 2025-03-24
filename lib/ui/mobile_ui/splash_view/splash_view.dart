@@ -5,7 +5,6 @@ import 'package:ase/constant/cont_colors.dart';
 import 'package:ase/constant/cont_text.dart';
 import 'package:ase/extensions/size_box.dart';
 import 'package:ase/ui/mobile_ui/auth_views/login_view.dart';
-import 'package:ase/ui/mobile_ui/dashbord_views/home_view/home_view.dart';
 import 'package:ase/ui/mobile_ui/dashbord_views/navigation_view.dart';
 import 'package:fade_out_particle/fade_out_particle.dart';
 import 'package:flutter/material.dart';

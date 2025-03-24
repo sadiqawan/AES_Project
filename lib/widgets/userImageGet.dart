@@ -25,7 +25,7 @@ Widget userImage() {
         } else {
           return CircleAvatar(
             maxRadius: 25.sp,
-            backgroundImage: NetworkImage(userData!['picture']),
+            backgroundImage: NetworkImage(userData['picture']),
           );
         }
       });
