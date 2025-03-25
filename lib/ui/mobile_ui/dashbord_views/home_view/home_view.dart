@@ -1,6 +1,7 @@
 import 'package:ase/constant/assets.dart';
 import 'package:ase/constant/cont_text.dart';
 import 'package:ase/extensions/size_box.dart';
+import 'package:ase/ui/mobile_ui/dashbord_views/home_view/ex_routs/stock_summary_view/stock_summary_view.dart';
 import 'package:ase/widgets/card_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -26,7 +27,8 @@ class _HomeViewState extends State<HomeView> {
 }
 
 Widget _screen(BuildContext context) {
-  final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+  final isLandscape =
+      MediaQuery.of(context).orientation == Orientation.landscape;
 
   return Scaffold(
     appBar: AppBar(
@@ -41,7 +43,8 @@ Widget _screen(BuildContext context) {
             Center(
               child: Image.asset(
                 appLogo,
-                height: isLandscape ? 40.h : 25.h,  // Adjust height in landscape mode
+                height: isLandscape ? 40.h : 25.h,
+                // Adjust height in landscape mode
                 width: isLandscape ? 30.w : 45.w,
                 fit: BoxFit.fill,
               ),
@@ -63,26 +66,28 @@ Widget _screen(BuildContext context) {
                 ),
                 CardButton(
                   onTap: () {
-                    Get.to(()=>StockAvailableView());
+                    Get.to(() => StockAvailableView());
                   },
                   icon: Icons.list_alt_rounded,
                   title: stockAvailable,
                 ),
                 CardButton(
-                  onTap: () {},
+                  onTap: () {
+                    Get.to(() => StockSummaryView());
+                  },
                   icon: Icons.download,
                   title: stockSummary,
                 ),
                 CardButton(
                   onTap: () {
-                    Get.to(()=> AddDispatchView ());
+                    Get.to(() => AddDispatchView());
                   },
                   icon: Icons.recycling,
                   title: stockDispatch,
                 ),
               ],
             ),
-            100.height
+            100.height,
           ],
         ),
       ),

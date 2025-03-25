@@ -22,7 +22,7 @@ Widget _screen(BuildContext context){
           .collection('availableStock')
           .doc('456')
           .collection('allStock')
-          .orderBy('entryDate', descending: false) // Ensures ascending order
+          .orderBy('entryDate', descending: false)
           .snapshots(),
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
