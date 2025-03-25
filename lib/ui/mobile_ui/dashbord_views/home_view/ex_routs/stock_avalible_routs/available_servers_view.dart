@@ -1,17 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class FirewallHistoryView extends StatefulWidget {
-  const FirewallHistoryView({super.key});
+class AvailableServersView extends StatefulWidget {
+  const AvailableServersView({super.key});
 
   @override
-  State<FirewallHistoryView> createState() => _FirewallHistoryViewState();
+  State<AvailableServersView> createState() => _AvailableServersViewState();
 }
 
-class _FirewallHistoryViewState extends State<FirewallHistoryView> {
+class _AvailableServersViewState extends State<AvailableServersView> {
   @override
   Widget build(BuildContext context) {
-
     return _screen(context);
   }
 }
@@ -20,7 +19,7 @@ Widget _screen(BuildContext context){
   return Scaffold(
     appBar: AppBar(title: const Text('Firewalls History')),
     body: StreamBuilder(
-      stream: FirebaseFirestore.instance.collection('allHistory').doc('123').collection('firewalls').snapshots(),
+      stream: FirebaseFirestore.instance.collection('availableStock').doc('456').collection('servers').snapshots(),
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -49,7 +48,7 @@ Widget _screen(BuildContext context){
                 DataColumn(label: Text('Cost')),
                 DataColumn(label: Text('Added By')),
                 DataColumn(label: Text('Date')),
-                DataColumn(label: Text('Status')),
+                DataColumn(label: Text('Stock updated by')),
               ],
               rows: List.generate(historyData.length, (index) {
                 var data = historyData[index];
@@ -64,7 +63,8 @@ Widget _screen(BuildContext context){
                   DataCell(Text(data['itemCost'].toString())),
                   DataCell(Text(data['entryBy'] ?? 'N/A')),
                   DataCell(Text(data['entryDate'] ?? 'N/A')),
-                  DataCell(Text(data['status'] ?? 'N/A')),
+                  DataCell(Text(data['upDatedBy'] ?? 'N/A')),
+
                 ]);
               }),
             ),

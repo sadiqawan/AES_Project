@@ -51,49 +51,56 @@ Widget _screen(BuildContext context) {
                         width: 40.w,
                       ),
                     ),
-      
+
                     InkWell(
                       onTap: () {
                         Get.bottomSheet(
                           backgroundColor: kWhite,
-                          SizedBox(
-                            height: 200,
-                            child: Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text('Update Your Pic', style: kHeading2B),
-      
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      Flexible(
-                                        child: CustomButton(
-                                          title: 'Select Camera',
-                                          onTap: () {
-                                            profileViewController.pickImageFrom(
-                                              ImageSource.camera,
-                                            );
-                                          },
-                                        ),
+                          isScrollControlled: true, // Allows the bottom sheet to expand
+                          Container(
+                            padding: EdgeInsets.all(2.w),
+                            width: double.infinity,
+                            constraints: BoxConstraints(
+                              maxHeight: 50.h,
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  'UpdateYourPic',
+                                  style: kHeading2B.copyWith(fontSize: 12.sp),
+                                ),
+                                2.height,
+                                Divider(thickness: 1, color: Colors.grey.shade300),
+                                3.height,
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Flexible(
+                                      child: CustomButton(
+                                        title: 'Select Camera',
+                                        btnStyle: kSmallTitle1.copyWith(fontSize: 12.sp),
+
+                                        onTap: () {
+                                          profileViewController.pickImageFrom(ImageSource.camera);
+                                          Get.back();
+                                        },
                                       ),
-                                      SizedBox(width: 5.w),
-                                      Flexible(
-                                        child: CustomButton(
-                                          title: 'Select Gallery',
-                                          onTap: () {
-                                            profileViewController.pickImageFrom(
-                                              ImageSource.gallery,
-                                            );
-                                          },
-                                        ),
+                                    ),
+                                    1.width,
+                                    Flexible(
+                                      child: CustomButton(
+                                        title: 'Select Gallery',
+                                        btnStyle: kSmallTitle1.copyWith(fontSize: 12.sp),
+                                        onTap: () {
+                                          profileViewController.pickImageFrom(ImageSource.gallery);
+                                          Get.back();
+                                        },
                                       ),
-                                    ],
-                                  ),
-                                ],
-                              ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
                         );
@@ -106,7 +113,7 @@ Widget _screen(BuildContext context) {
                         ],
                       ),
                     ),
-      
+
                     _widget(Icons.person_outline, 'Name'),
                     _widget(Icons.email_outlined, 'Email'),
                     _widget(Icons.watch_later_outlined, 'Time'),

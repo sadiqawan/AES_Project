@@ -97,6 +97,8 @@ Widget _screen(BuildContext context) {
               10.height,
               _inPut(modelNo, model, controller.modelC, Icons.segment_rounded, false),
               10.height,
+              _inPut(enterCondition, condition, controller.conditionC, Icons.new_releases_outlined, false),
+              10.height,
               _inPut(enterCost, cost, controller.costC, Icons.monetization_on_rounded, true),
               10.height,
               _inPut(enterQuantity, quantity, controller.quantityC, Icons.confirmation_number_outlined, true),

@@ -14,6 +14,7 @@ class AddItemController extends GetxController {
   TextEditingController costC = TextEditingController();
   TextEditingController modelC = TextEditingController();
   TextEditingController quantityC = TextEditingController();
+  TextEditingController conditionC = TextEditingController();
 
   RxString selectedItem = ''.obs;
   RxBool selectedTimeOn = true.obs;
@@ -55,6 +56,10 @@ class AddItemController extends GetxController {
       ErrorSnackbar.show(title: failed, message: pleaseEnterModelNo);
       return false;
     }
+    if (conditionC.text.trim().isEmpty) {
+      ErrorSnackbar.show(title: failed, message: pleaseConditionOfItem);
+      return false;
+    }
     if (costC.text.trim().isEmpty ||
         double.tryParse(costC.text.trim()) == null) {
       ErrorSnackbar.show(title: failed, message: pleaseEnterCostOfItem);
@@ -75,7 +80,6 @@ class AddItemController extends GetxController {
     }
     return true;
   }
-
   Future<void> updateAllHistory() async {
     if (!validateInputs()) return;
 
@@ -86,6 +90,180 @@ class AddItemController extends GetxController {
     final cost = costC.text.trim();
     final quantity = quantityC.text.trim();
     final model = modelC.text.trim();
+    final condition = conditionC.text.trim();
+
+    try {
+      DocumentSnapshot userDoc =
+      await fireStore.collection('users').doc(auth).get();
+      String entryBy =
+      userDoc.exists ? userDoc['name'] ?? 'Unknown User' : 'Unknown User';
+
+      Map<int, String> itemCollections = {
+        0: 'switches',
+        1: 'routers',
+        2: 'firewalls',
+        3: 'servers',
+        4: 'others',
+      };
+
+      String collectionName = itemCollections[itemSelectIndex.value] ?? '';
+
+      // 🔹 Add history record
+      String itemType = list[itemSelectIndex.value];
+
+      Map<String, dynamic> historyData = {
+        'itemType': itemType,
+        'itemName': name,
+        'serialNo': serial,
+        'modelNo': model,
+        'itemCost': cost,
+        'itemQuantity': quantity,
+        'entryDate': selectedDate.value,
+        'entryBy': entryBy,
+        'condition': condition,
+        'status': 'Added',
+      };
+
+      await fireStore
+          .collection('allHistory')
+          .doc('123')
+          .collection('allData')
+          .doc()
+          .set(historyData);
+
+      await fireStore
+          .collection('allHistory')
+          .doc('123')
+          .collection(collectionName)
+          .doc()
+          .set(historyData);
+
+
+      // 🔹 Create new item entry
+      Map<String, dynamic> stockData = {
+        'itemType': itemType,
+        'itemName': name,
+        'serialNo': serial,
+        'modelNo': model,
+        'itemCost': cost,
+        'itemQuantity': quantity,
+        'entryDate': selectedDate.value,
+        'entryBy': entryBy,
+        'condition': condition,
+        'upDatedBy': '-',
+      };
+
+      await fireStore
+          .collection('availableStock')
+          .doc('456')
+          .collection('allStock')
+          .doc()
+          .set(stockData);
+
+      await fireStore
+          .collection('availableStock')
+          .doc('456')
+          .collection(collectionName)
+          .doc()
+          .set(stockData);
+
+      // // 🔹 Check if item exists in availableStock
+      // QuerySnapshot querySnapshot = await fireStore
+      //     .collection('availableStock')
+      //     .doc('456')
+      //     .collection('allStock')
+      //     .where('serialNo', isEqualTo: serial)
+      //     .get();
+
+/*
+      int newQuantity = int.tryParse(quantity) ?? 0;
+      int newCost = int.tryParse(cost) ?? 0;*/
+
+    /*  if (querySnapshot.docs.isNotEmpty) {
+        // 🔹 Update existing item
+        DocumentSnapshot doc = querySnapshot.docs.first;
+       final existingQuantity = int.tryParse(doc['itemQuantity']);
+       final existingCost = int.tryParse(doc['itemCost']);
+
+        await doc.reference.update({
+          'itemQuantity': existingQuantity! + newQuantity,
+          'itemCost': existingCost! + newCost,
+          'entryDate': selectedDate.value,
+          'entryBy': entryBy,
+        });
+
+        await fireStore
+            .collection('availableStock')
+            .doc('456')
+            .collection(collectionName)
+            .doc(doc.id)
+            .update({
+          'itemQuantity': existingQuantity + newQuantity,
+          'entryDate': selectedDate.value,
+          'entryBy': entryBy,
+        });
+
+      } else {
+        // 🔹 Create new item entry
+        Map<String, dynamic> stockData = {
+          'itemType': itemType,
+          'itemName': name,
+          'serialNo': serial,
+          'modelNo': model,
+          'itemCost': cost,
+          'itemQuantity': quantity,
+          'entryDate': selectedDate.value,
+          'entryBy': entryBy,
+          'condition': condition,
+        };
+
+        await fireStore
+            .collection('availableStock')
+            .doc('456')
+            .collection('allStock')
+            .doc()
+            .set(stockData);
+
+        await fireStore
+            .collection('availableStock')
+            .doc('456')
+            .collection(collectionName)
+            .doc()
+            .set(stockData);
+      }*/
+
+      SuccessSnackbar.show(title: success, message: itemAddedSuccessfully);
+
+      // Reset fields
+      nameC.clear();
+      serialNoC.clear();
+      costC.clear();
+      quantityC.clear();
+      modelC.clear();
+      conditionC.clear();
+      selectedItem.value = '';
+      selectedDate.value = '';
+      itemSelectIndex.value = -1;
+    } catch (e) {
+      ErrorSnackbar.show(title: failed, message: "Failed to add item: $e");
+      print(e.toString());
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+
+/*  Future<void> updateAllHistory() async {
+    if (!validateInputs()) return;
+
+    isLoading.value = true;
+
+    final name = nameC.text.trim();
+    final serial = serialNoC.text.trim();
+    final cost = costC.text.trim();
+    final quantity = quantityC.text.trim();
+    final model = modelC.text.trim();
+    final condition = conditionC.text.trim();
 
     try {
       DocumentSnapshot userDoc =
@@ -103,6 +281,8 @@ class AddItemController extends GetxController {
 
       String collectionName = itemCollections[itemSelectIndex.value] ?? '';
 
+      // Added History
+
       await fireStore
           .collection('allHistory')
           .doc('123')
@@ -117,8 +297,8 @@ class AddItemController extends GetxController {
             'itemQuantity': quantity,
             'entryDate': selectedDate.value,
             'entryBy': entryBy,
+            'condition': condition,
             'status': 'Added',
-
           });
 
       await fireStore
@@ -135,17 +315,99 @@ class AddItemController extends GetxController {
             'itemQuantity': quantity,
             'entryDate': selectedDate.value,
             'entryBy': entryBy,
+            'condition': condition,
             'status': 'Added',
           });
 
+      // available Stock
+
+      // 🔹 Check if item with same serial number exists in availableStock
+      QuerySnapshot querySnapshot = await fireStore
+          .collection('availableStock')
+          .doc('456')
+          .collection('allStock')
+          .where('modelNo', isEqualTo: model)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        // 🔹 Item exists, update quantity
+        int newQuantity = int.tryParse(quantityC.text.trim()) ?? 0;
+        int newCost = int.tryParse(costC.text.trim()) ?? 0;
+        var doc = querySnapshot.docs.first;
+        int existingQuantity = (doc['itemQuantity']).toInt();
+        int existingCost = (doc['itemCost']).toInt();
+
+        await fireStore
+            .collection('availableStock')
+            .doc('456')
+            .collection('allStock')
+            .doc(doc.id)
+            .update({
+          'itemQuantity': existingQuantity + newQuantity,
+          'itemCost': existingCost + newCost,
+          'entryDate': selectedDate.value,
+          'entryBy': entryBy,
+        });
+        await fireStore
+            .collection('availableStock')
+            .doc('456')
+            .collection(collectionName)
+            .doc(doc.id)
+            .update({
+          'itemQuantity': existingQuantity + newQuantity,
+          'entryDate': selectedDate.value,
+          'entryBy': entryBy,
+        });
+
+      } else {
+        // 🔹 Item does not exist, create a new entry
+        await fireStore
+            .collection('availableStock')
+            .doc('456')
+            .collection('allStock')
+            .doc()
+            .set({
+          'itemType': list[itemSelectIndex.value],
+          'itemName': name,
+          'serialNo': serial,
+          'modelNo': model,
+          'itemCost': cost,
+          'itemQuantity': quantity,
+          'entryDate': selectedDate.value,
+          'entryBy': entryBy,
+          'condition': condition,
+        });
+
+        await fireStore
+            .collection('availableStock')
+            .doc('456')
+            .collection(collectionName)
+            .doc()
+            .set({
+          'itemType': list[itemSelectIndex.value],
+          'itemName': name,
+          'serialNo': serial,
+          'modelNo': model,
+          'itemCost': cost,
+          'itemQuantity': quantity,
+          'entryDate': selectedDate.value,
+          'entryBy': entryBy,
+          'condition': condition,
+        });
+
+      }
+
+
+
       SuccessSnackbar.show(title: success, message: itemAddedSuccessfully);
 
-      // **Reset Fields**
+      // Reset Fields
       nameC.clear();
       serialNoC.clear();
       costC.clear();
       quantityC.clear();
       modelC.clear();
+      conditionC.clear();
       selectedItem.value = '';
       selectedDate.value = '';
       itemSelectIndex.value = -1;
@@ -154,11 +416,7 @@ class AddItemController extends GetxController {
     } finally {
       isLoading.value = false;
     }
-  }
-
-  void onTap() {
-    print("Selected Index: ${itemSelectIndex.value}");
-  }
+  }*/
 }
 
 /*import 'package:ase/constant/cont_text.dart';

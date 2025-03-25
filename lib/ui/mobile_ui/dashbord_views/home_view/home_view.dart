@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import '../../../../constant/const_style.dart';
 import '../../../../widgets/userImageGet.dart';
+import 'ex_routs/stock_avalible_routs/stock_availible_view.dart';
 import 'ex_routs/stock_history_routs/stock_history_ex_1.dart';
 
 class HomeView extends StatefulWidget {
@@ -39,7 +40,7 @@ Widget _screen(BuildContext context) {
             Center(
               child: Image.asset(
                 appLogo,
-                height: isLandscape ? 50.h : 25.h,  // Adjust height in landscape mode
+                height: isLandscape ? 40.h : 25.h,  // Adjust height in landscape mode
                 width: isLandscape ? 30.w : 45.w,
                 fit: BoxFit.fill,
               ),
@@ -60,7 +61,9 @@ Widget _screen(BuildContext context) {
                   title: stockHistory,
                 ),
                 CardButton(
-                  onTap: () {},
+                  onTap: () {
+                    Get.to(()=>StockAvailableView());
+                  },
                   icon: Icons.list_alt_rounded,
                   title: stockAvailable,
                 ),

@@ -1,26 +1,25 @@
+import 'package:ase/constant/cont_colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class FirewallHistoryView extends StatefulWidget {
-  const FirewallHistoryView({super.key});
+class AvailableSwitchesView extends StatefulWidget {
+  const AvailableSwitchesView({super.key});
 
   @override
-  State<FirewallHistoryView> createState() => _FirewallHistoryViewState();
+  State<AvailableSwitchesView> createState() => _AvailableSwitchesViewState();
 }
 
-class _FirewallHistoryViewState extends State<FirewallHistoryView> {
+class _AvailableSwitchesViewState extends State<AvailableSwitchesView> {
   @override
   Widget build(BuildContext context) {
-
     return _screen(context);
   }
 }
-
 Widget _screen(BuildContext context){
   return Scaffold(
     appBar: AppBar(title: const Text('Firewalls History')),
     body: StreamBuilder(
-      stream: FirebaseFirestore.instance.collection('allHistory').doc('123').collection('firewalls').snapshots(),
+      stream: FirebaseFirestore.instance.collection('availableStock').doc('456').collection('switches').snapshots(),
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -35,8 +34,9 @@ Widget _screen(BuildContext context){
           scrollDirection: Axis.horizontal,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: DataTable(
 
+            child: DataTable(
+              sortAscending: true,
               columnSpacing: 15,
               columns: const [
                 DataColumn(label: Text('Index')),
@@ -49,7 +49,7 @@ Widget _screen(BuildContext context){
                 DataColumn(label: Text('Cost')),
                 DataColumn(label: Text('Added By')),
                 DataColumn(label: Text('Date')),
-                DataColumn(label: Text('Status')),
+                DataColumn(label: Text('Stock updated by')),
               ],
               rows: List.generate(historyData.length, (index) {
                 var data = historyData[index];
@@ -64,7 +64,8 @@ Widget _screen(BuildContext context){
                   DataCell(Text(data['itemCost'].toString())),
                   DataCell(Text(data['entryBy'] ?? 'N/A')),
                   DataCell(Text(data['entryDate'] ?? 'N/A')),
-                  DataCell(Text(data['status'] ?? 'N/A')),
+                  DataCell(Text(data['upDatedBy'] ?? 'N/A')),
+
                 ]);
               }),
             ),

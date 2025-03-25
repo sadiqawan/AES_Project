@@ -36,7 +36,7 @@ Widget _screen(BuildContext context){
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: DataTable(
-
+              sortAscending: true,
               columnSpacing: 15,
               columns: const [
                 DataColumn(label: Text('Index')),
@@ -44,6 +44,7 @@ Widget _screen(BuildContext context){
                 DataColumn(label: Text('S.No')),
                 DataColumn(label: Text('Model')),
                 DataColumn(label: Text('Name')),
+                DataColumn(label: Text('Condition')),
                 DataColumn(label: Text('Quantity')),
                 DataColumn(label: Text('Cost')),
                 DataColumn(label: Text('Added By')),
@@ -58,6 +59,7 @@ Widget _screen(BuildContext context){
                   DataCell(Text(data['serialNo'] ?? 'N/A')),
                   DataCell(Text(data['modelNo'] ?? 'N/A')),
                   DataCell(Text(data['itemName'] ?? 'N/A')),
+                  DataCell(Text(data['condition'] ?? 'N/A')),
                   DataCell(Text(data['itemQuantity'].toString())),
                   DataCell(Text(data['itemCost'].toString())),
                   DataCell(Text(data['entryBy'] ?? 'N/A')),
