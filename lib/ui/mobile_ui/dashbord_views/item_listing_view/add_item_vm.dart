@@ -80,6 +80,7 @@ class AddItemController extends GetxController {
     }
     return true;
   }
+
   Future<void> updateAllHistory() async {
     if (!validateInputs()) return;
 
@@ -94,9 +95,9 @@ class AddItemController extends GetxController {
 
     try {
       DocumentSnapshot userDoc =
-      await fireStore.collection('users').doc(auth).get();
+          await fireStore.collection('users').doc(auth).get();
       String entryBy =
-      userDoc.exists ? userDoc['name'] ?? 'Unknown User' : 'Unknown User';
+          userDoc.exists ? userDoc['name'] ?? 'Unknown User' : 'Unknown User';
 
       Map<int, String> itemCollections = {
         0: 'switches',
@@ -122,6 +123,9 @@ class AddItemController extends GetxController {
         'entryBy': entryBy,
         'condition': condition,
         'status': 'Added',
+        'upDatedBy': '-',
+        'dispatchBy': '-',
+
       };
 
       await fireStore
@@ -138,7 +142,6 @@ class AddItemController extends GetxController {
           .doc()
           .set(historyData);
 
-
       // 🔹 Create new item entry
       Map<String, dynamic> stockData = {
         'itemType': itemType,
@@ -151,6 +154,8 @@ class AddItemController extends GetxController {
         'entryBy': entryBy,
         'condition': condition,
         'upDatedBy': '-',
+        'dispatchBy': '-',
+
       };
 
       await fireStore
@@ -166,71 +171,6 @@ class AddItemController extends GetxController {
           .collection(collectionName)
           .doc()
           .set(stockData);
-
-      // // 🔹 Check if item exists in availableStock
-      // QuerySnapshot querySnapshot = await fireStore
-      //     .collection('availableStock')
-      //     .doc('456')
-      //     .collection('allStock')
-      //     .where('serialNo', isEqualTo: serial)
-      //     .get();
-
-/*
-      int newQuantity = int.tryParse(quantity) ?? 0;
-      int newCost = int.tryParse(cost) ?? 0;*/
-
-    /*  if (querySnapshot.docs.isNotEmpty) {
-        // 🔹 Update existing item
-        DocumentSnapshot doc = querySnapshot.docs.first;
-       final existingQuantity = int.tryParse(doc['itemQuantity']);
-       final existingCost = int.tryParse(doc['itemCost']);
-
-        await doc.reference.update({
-          'itemQuantity': existingQuantity! + newQuantity,
-          'itemCost': existingCost! + newCost,
-          'entryDate': selectedDate.value,
-          'entryBy': entryBy,
-        });
-
-        await fireStore
-            .collection('availableStock')
-            .doc('456')
-            .collection(collectionName)
-            .doc(doc.id)
-            .update({
-          'itemQuantity': existingQuantity + newQuantity,
-          'entryDate': selectedDate.value,
-          'entryBy': entryBy,
-        });
-
-      } else {
-        // 🔹 Create new item entry
-        Map<String, dynamic> stockData = {
-          'itemType': itemType,
-          'itemName': name,
-          'serialNo': serial,
-          'modelNo': model,
-          'itemCost': cost,
-          'itemQuantity': quantity,
-          'entryDate': selectedDate.value,
-          'entryBy': entryBy,
-          'condition': condition,
-        };
-
-        await fireStore
-            .collection('availableStock')
-            .doc('456')
-            .collection('allStock')
-            .doc()
-            .set(stockData);
-
-        await fireStore
-            .collection('availableStock')
-            .doc('456')
-            .collection(collectionName)
-            .doc()
-            .set(stockData);
-      }*/
 
       SuccessSnackbar.show(title: success, message: itemAddedSuccessfully);
 
@@ -252,8 +192,7 @@ class AddItemController extends GetxController {
     }
   }
 
-
-/*  Future<void> updateAllHistory() async {
+  /*  Future<void> updateAllHistory() async {
     if (!validateInputs()) return;
 
     isLoading.value = true;

@@ -49,7 +49,8 @@ Widget _screen(BuildContext context){
                 DataColumn(label: Text('Cost')),
                 DataColumn(label: Text('Added By')),
                 DataColumn(label: Text('Date')),
-                DataColumn(label: Text('Status')),
+                DataColumn(label: Text('Stock updated By')),
+                DataColumn(label: Text('DispatchBy')),
               ],
               rows: List.generate(historyData.length, (index) {
                 var data = historyData[index];
@@ -64,7 +65,8 @@ Widget _screen(BuildContext context){
                   DataCell(Text(data['itemCost'].toString())),
                   DataCell(Text(data['entryBy'] ?? 'N/A')),
                   DataCell(Text(data['entryDate'] ?? 'N/A')),
-                  DataCell(Text(data['status'] ?? 'N/A')),
+                  DataCell(Text(data['upDatedBy'] ?? 'N/A')),
+                  DataCell(Text(data['dispatchBy'] ?? 'N/A')),
                 ]);
               }),
             ),

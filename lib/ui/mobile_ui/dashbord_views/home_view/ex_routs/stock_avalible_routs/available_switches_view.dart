@@ -31,10 +31,9 @@ Widget _screen(BuildContext context){
         var historyData = snapshot.data!.docs;
 
         return SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
+          scrollDirection: Axis.horizontal, // Allow horizontal scrolling
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-
             child: DataTable(
               sortAscending: true,
               columnSpacing: 15,
@@ -49,7 +48,8 @@ Widget _screen(BuildContext context){
                 DataColumn(label: Text('Cost')),
                 DataColumn(label: Text('Added By')),
                 DataColumn(label: Text('Date')),
-                DataColumn(label: Text('Stock updated by')),
+                DataColumn(label: Text('Stock updated By')),
+                DataColumn(label: Text('DispatchBy')),
               ],
               rows: List.generate(historyData.length, (index) {
                 var data = historyData[index];
@@ -65,7 +65,7 @@ Widget _screen(BuildContext context){
                   DataCell(Text(data['entryBy'] ?? 'N/A')),
                   DataCell(Text(data['entryDate'] ?? 'N/A')),
                   DataCell(Text(data['upDatedBy'] ?? 'N/A')),
-
+                  DataCell(Text(data['dispatchBy'] ?? 'N/A')),
                 ]);
               }),
             ),

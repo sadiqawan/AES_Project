@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import '../../../../constant/const_style.dart';
 import '../../../../widgets/userImageGet.dart';
+import 'ex_routs/add_dispaichs_view/add_dispatch_view.dart';
 import 'ex_routs/stock_avalible_routs/stock_availible_view.dart';
 import 'ex_routs/stock_history_routs/stock_history_ex_1.dart';
 
@@ -73,7 +74,9 @@ Widget _screen(BuildContext context) {
                   title: stockSummary,
                 ),
                 CardButton(
-                  onTap: () {},
+                  onTap: () {
+                    Get.to(()=> AddDispatchView ());
+                  },
                   icon: Icons.recycling,
                   title: stockDispatch,
                 ),

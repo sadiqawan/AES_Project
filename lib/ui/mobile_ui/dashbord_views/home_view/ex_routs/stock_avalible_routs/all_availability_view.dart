@@ -18,7 +18,12 @@ Widget _screen(BuildContext context){
   return Scaffold(
     appBar: AppBar(title: const Text('Available Stock')),
     body: StreamBuilder(
-      stream: FirebaseFirestore.instance.collection('availableStock').doc('456').collection('allStock').snapshots(),
+      stream: FirebaseFirestore.instance
+          .collection('availableStock')
+          .doc('456')
+          .collection('allStock')
+          .orderBy('entryDate', descending: false) // Ensures ascending order
+          .snapshots(),
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -48,7 +53,7 @@ Widget _screen(BuildContext context){
                 DataColumn(label: Text('Added By')),
                 DataColumn(label: Text('Date')),
                 DataColumn(label: Text('Stock updated By')),
-
+                DataColumn(label: Text('DispatchBy')),
               ],
               rows: List.generate(historyData.length, (index) {
                 var data = historyData[index];
@@ -64,7 +69,7 @@ Widget _screen(BuildContext context){
                   DataCell(Text(data['entryBy'] ?? 'N/A')),
                   DataCell(Text(data['entryDate'] ?? 'N/A')),
                   DataCell(Text(data['upDatedBy'] ?? 'N/A')),
-
+                  DataCell(Text(data['dispatchBy'] ?? 'N/A')),
                 ]);
               }),
             ),
@@ -72,5 +77,6 @@ Widget _screen(BuildContext context){
         );
       },
     ),
+
   );
 }
