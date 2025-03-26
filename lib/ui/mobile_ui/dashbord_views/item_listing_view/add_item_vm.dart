@@ -125,6 +125,9 @@ class AddItemController extends GetxController {
         'status': 'Added',
         'upDatedBy': '-',
         'dispatchBy': '-',
+        'dispatchTo': '-',
+        'timestamp': FieldValue.serverTimestamp(),
+        'entryTimestamp': FieldValue.serverTimestamp(),
 
       };
 
@@ -155,6 +158,10 @@ class AddItemController extends GetxController {
         'condition': condition,
         'upDatedBy': '-',
         'dispatchBy': '-',
+        'dispatchTo': '-',
+        'timestamp': FieldValue.serverTimestamp(),
+        'entryTimestamp': FieldValue.serverTimestamp(),
+
 
       };
 

@@ -183,6 +183,14 @@ class _DispatchViewState extends State<DispatchView> {
                   true,
                 ),
                 10.height,
+                _inPut(
+                  'Enter Dispatch To:',
+                  quantity,
+                  controller.dispatchC,
+                  Icons.confirmation_number_outlined,
+                  false,
+                ),
+                10.height,
                 Text(
                   dateOfEntry,
                   style: kSmallTitle1.copyWith(fontSize: 17.sp),

@@ -21,12 +21,26 @@ class MyApp extends StatelessWidget {
     return Sizer(
       builder: (context, orientation, screenType) {
         return GetMaterialApp(
-          debugShowCheckedModeBanner: true,
+          debugShowCheckedModeBanner: false,
           title: 'ASE',
           theme: ThemeData(
             fontFamily: GoogleFonts.poppins().fontFamily,
             scaffoldBackgroundColor: kWhite,
-            appBarTheme: AppBarTheme(backgroundColor: kSecondaryColor),
+            appBarTheme: AppBarTheme(
+
+              centerTitle: true,
+              backgroundColor: kSecondaryColor,
+              elevation: 4,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(bottom: Radius.circular(16)),
+              ),
+              titleTextStyle: TextStyle(
+                fontSize: 18.sp,
+                fontWeight: FontWeight.bold,
+                color: kBlack,
+              ),
+              iconTheme: const IconThemeData(color: kBlack),
+            ),
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           ),
           home: const SplashView(),

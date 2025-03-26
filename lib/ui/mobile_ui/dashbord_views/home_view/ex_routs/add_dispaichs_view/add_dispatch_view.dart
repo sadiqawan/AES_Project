@@ -31,6 +31,7 @@ class _AddDispatchViewState extends State<AddDispatchView> {
                 .collection('availableStock')
                 .doc('456')
                 .collection('allStock')
+                .orderBy('entryTimestamp')
                 .snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {

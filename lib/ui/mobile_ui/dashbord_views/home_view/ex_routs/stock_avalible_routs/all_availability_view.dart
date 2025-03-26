@@ -22,7 +22,7 @@ Widget _screen(BuildContext context){
           .collection('availableStock')
           .doc('456')
           .collection('allStock')
-          .orderBy('entryDate', descending: false)
+          .orderBy('entryTimestamp')
           .snapshots(),
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -53,7 +53,8 @@ Widget _screen(BuildContext context){
                 DataColumn(label: Text('Added By')),
                 DataColumn(label: Text('Date')),
                 DataColumn(label: Text('Stock updated By')),
-                DataColumn(label: Text('DispatchBy')),
+                DataColumn(label: Text('Dispatch By')),
+                DataColumn(label: Text('Dispatch To')),
               ],
               rows: List.generate(historyData.length, (index) {
                 var data = historyData[index];
@@ -70,6 +71,8 @@ Widget _screen(BuildContext context){
                   DataCell(Text(data['entryDate'] ?? 'N/A')),
                   DataCell(Text(data['upDatedBy'] ?? 'N/A')),
                   DataCell(Text(data['dispatchBy'] ?? 'N/A')),
+                  DataCell(Text(data['dispatchTo'] ?? 'N/A')),
+
                 ]);
               }),
             ),

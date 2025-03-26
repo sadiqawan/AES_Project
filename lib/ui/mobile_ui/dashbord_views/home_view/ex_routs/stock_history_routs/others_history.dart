@@ -12,15 +12,20 @@ class _OthersHistoryViewState extends State<OthersHistoryView> {
   @override
   Widget build(BuildContext context) {
     return _screen(context);
-
   }
 }
 
-Widget _screen(BuildContext context){
+Widget _screen(BuildContext context) {
   return Scaffold(
     appBar: AppBar(title: const Text('PassiveItems History')),
     body: StreamBuilder(
-      stream: FirebaseFirestore.instance.collection('allHistory').doc('123').collection('others').snapshots(),
+      stream:
+          FirebaseFirestore.instance
+              .collection('allHistory')
+              .doc('123')
+              .collection('others')
+              .orderBy('timestamp')
+              .snapshots(),
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -50,24 +55,29 @@ Widget _screen(BuildContext context){
                 DataColumn(label: Text('Added By')),
                 DataColumn(label: Text('Date')),
                 DataColumn(label: Text('Stock updated By')),
-                DataColumn(label: Text('DispatchBy')),
+                DataColumn(label: Text('Dispatch By')),
+                DataColumn(label: Text('Dispatch To')),
               ],
               rows: List.generate(historyData.length, (index) {
                 var data = historyData[index];
-                return DataRow(cells: [
-                  DataCell(Text('${index + 1}')),
-                  DataCell(Text(data['itemType'] ?? 'N/A')),
-                  DataCell(Text(data['serialNo'] ?? 'N/A')),
-                  DataCell(Text(data['modelNo'] ?? 'N/A')),
-                  DataCell(Text(data['itemName'] ?? 'N/A')),
-                  DataCell(Text(data['condition'] ?? 'N/A')),
-                  DataCell(Text(data['itemQuantity'].toString())),
-                  DataCell(Text(data['itemCost'].toString())),
-                  DataCell(Text(data['entryBy'] ?? 'N/A')),
-                  DataCell(Text(data['entryDate'] ?? 'N/A')),
-                  DataCell(Text(data['upDatedBy'] ?? 'N/A')),
-                  DataCell(Text(data['dispatchBy'] ?? 'N/A')),
-                ]);
+                return DataRow(
+                  cells: [
+                    DataCell(Text('${index + 1}')),
+                    DataCell(Text(data['itemType'] ?? 'N/A')),
+                    DataCell(Text(data['serialNo'] ?? 'N/A')),
+                    DataCell(Text(data['modelNo'] ?? 'N/A')),
+                    DataCell(Text(data['itemName'] ?? 'N/A')),
+                    DataCell(Text(data['condition'] ?? 'N/A')),
+                    DataCell(Text(data['itemQuantity'].toString())),
+                    DataCell(Text(data['itemCost'].toString())),
+                    DataCell(Text(data['entryBy'] ?? 'N/A')),
+                    DataCell(Text(data['entryDate'] ?? 'N/A')),
+                    DataCell(Text(data['upDatedBy'] ?? 'N/A')),
+                    DataCell(Text(data['dispatchBy'] ?? 'N/A')),
+                    DataCell(Text(data['dispatchTo'] ?? 'N/A')),
+
+                  ],
+                );
               }),
             ),
           ),

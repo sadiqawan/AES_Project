@@ -9,6 +9,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:printing/printing.dart';
 import 'package:universal_html/html.dart' as html;
 
+import '../../../../../../constant/cont_colors.dart';
+
 class StockSummaryView extends StatefulWidget {
   const StockSummaryView({super.key});
 
@@ -18,77 +20,80 @@ class StockSummaryView extends StatefulWidget {
 
 class _StockSummaryViewState extends State<StockSummaryView> {
   List<QueryDocumentSnapshot> historyData = [];
+
   Future<void> _generatePDF() async {
     final pdf = pw.Document();
 
-
     pdf.addPage(
       pw.Page(
-        build: (pw.Context context) => pw.Column(
-          crossAxisAlignment: pw.CrossAxisAlignment.start,
-          children: [
-            pw.Text(
-              'Stock Summary Report',
-              style: pw.TextStyle(
-                fontSize: 16,
-                fontWeight: pw.FontWeight.bold,
-                decoration: pw.TextDecoration.underline,
-              ),
-            ),
-            pw.SizedBox(height: 10),
-            pw.Table.fromTextArray(
-              headers: [
-                'Index', 'Type', 'S.No', 'Model', 'Name', 'Status',
-                'QC', 'Cost', 'AddedBy', 'Date',
+        build:
+            (pw.Context context) => pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [
+                pw.Text(
+                  'Stock Summary Report',
+                  style: pw.TextStyle(
+                    fontSize: 16,
+                    fontWeight: pw.FontWeight.bold,
+                    decoration: pw.TextDecoration.underline,
+                  ),
+                ),
+                pw.SizedBox(height: 10),
+                pw.Table.fromTextArray(
+                  headers: [
+                    'Index',
+                    'Type',
+                    'S.No',
+                    'Model',
+                    'Name',
+                    'Status',
+                    'QC',
+                    'Cost',
+                    'AddedBy',
+                    'Date',
+                  ],
+                  headerDecoration: pw.BoxDecoration(color: PdfColors.grey300),
+                  headerStyle: pw.TextStyle(
+                    fontSize: 10,
+                    fontWeight: pw.FontWeight.bold,
+                  ),
+                  cellStyle: pw.TextStyle(fontSize: 9),
+                  data: List.generate(historyData.length, (index) {
+                    var data = historyData[index];
+                    return [
+                      '${index + 1}',
+                      data['itemType'] ?? 'N/A',
+                      data['serialNo'] ?? 'N/A',
+                      data['modelNo'] ?? 'N/A',
+                      data['itemName'] ?? 'N/A',
+                      data['condition'] ?? 'N/A',
+                      data['itemQuantity'].toString(),
+                      data['itemCost'].toString(),
+                      data['entryBy'] ?? 'N/A',
+                      data['entryDate'] ?? 'N/A',
+                    ];
+                  }),
+                  border: pw.TableBorder.all(
+                    color: PdfColors.black,
+                    width: 0.5,
+                  ),
+                  cellAlignment: pw.Alignment.centerLeft,
+                  columnWidths: {
+                    0: pw.FixedColumnWidth(30),
+                    1: pw.FixedColumnWidth(50),
+                    2: pw.FixedColumnWidth(40),
+                    3: pw.FixedColumnWidth(50),
+                    4: pw.FixedColumnWidth(50),
+                    5: pw.FixedColumnWidth(50),
+                    6: pw.FixedColumnWidth(40),
+                    7: pw.FixedColumnWidth(40),
+                    8: pw.FixedColumnWidth(60),
+                    9: pw.FixedColumnWidth(60),
+                  },
+                ),
               ],
-              headerDecoration: pw.BoxDecoration(
-                color: PdfColors.grey300,
-              ),
-              headerStyle: pw.TextStyle(
-                fontSize: 10,
-                fontWeight: pw.FontWeight.bold,
-              ),
-              cellStyle: pw.TextStyle(
-                fontSize: 9,
-              ),
-              data: List.generate(historyData.length, (index) {
-                var data = historyData[index];
-                return [
-                  '${index + 1}',
-                  data['itemType'] ?? 'N/A',
-                  data['serialNo'] ?? 'N/A',
-                  data['modelNo'] ?? 'N/A',
-                  data['itemName'] ?? 'N/A',
-                  data['condition'] ?? 'N/A',
-                  data['itemQuantity'].toString(),
-                  data['itemCost'].toString(),
-                  data['entryBy'] ?? 'N/A',
-                  data['entryDate'] ?? 'N/A',
-                ];
-              }),
-              border: pw.TableBorder.all(
-                color: PdfColors.black,
-                width: 0.5,
-              ),
-              cellAlignment: pw.Alignment.centerLeft,
-              columnWidths: {
-                0: pw.FixedColumnWidth(30),
-                1: pw.FixedColumnWidth(50),
-                2: pw.FixedColumnWidth(40),
-                3: pw.FixedColumnWidth(50),
-                4: pw.FixedColumnWidth(50),
-                5: pw.FixedColumnWidth(50),
-                6: pw.FixedColumnWidth(40),
-                7: pw.FixedColumnWidth(40),
-                8: pw.FixedColumnWidth(60),
-                9: pw.FixedColumnWidth(60),
-              },
             ),
-          ],
-        ),
       ),
-
-
     );
 
     final Uint8List pdfBytes = await pdf.save();
@@ -98,9 +103,10 @@ class _StockSummaryViewState extends State<StockSummaryView> {
       final blob = html.Blob([pdfBytes], 'application/pdf');
       final url = html.Url.createObjectUrlFromBlob(blob);
 
-      final anchor = html.AnchorElement(href: url)
-        ..setAttribute('download', 'Stock_Summary.pdf')
-        ..click();
+      final anchor =
+          html.AnchorElement(href: url)
+            ..setAttribute('download', 'Stock_Summary.pdf')
+            ..click();
 
       html.Url.revokeObjectUrl(url);
     } else {
@@ -115,9 +121,7 @@ class _StockSummaryViewState extends State<StockSummaryView> {
     }
   }
 
-
-
-/*  Future<void> _generatePDF() async {
+  /*  Future<void> _generatePDF() async {
     final pdf = pw.Document();
 
     pdf.addPage(
@@ -182,6 +186,8 @@ class _StockSummaryViewState extends State<StockSummaryView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+
       appBar: AppBar(title: const Text('Stock Summary')),
       body: StreamBuilder(
         stream:
@@ -189,7 +195,7 @@ class _StockSummaryViewState extends State<StockSummaryView> {
                 .collection('availableStock')
                 .doc('456')
                 .collection('allStock')
-                .orderBy('entryDate', descending: false)
+                .orderBy('entryTimestamp')
                 .snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -242,8 +248,9 @@ class _StockSummaryViewState extends State<StockSummaryView> {
         },
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: kBlack,
         onPressed: _generatePDF,
-        child: const Icon(Icons.download),
+        child: const Icon(Icons.download, color: kWhite),
       ),
     );
   }

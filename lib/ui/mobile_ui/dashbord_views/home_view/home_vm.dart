@@ -15,6 +15,7 @@ class HomeScreenController extends GetxController {
   TextEditingController modelC = TextEditingController();
   TextEditingController quantityC = TextEditingController();
   TextEditingController conditionC = TextEditingController();
+  TextEditingController dispatchC = TextEditingController();
 
   RxString selectedItem = ''.obs;
   RxBool selectedTimeOn = true.obs;
@@ -129,6 +130,8 @@ class HomeScreenController extends GetxController {
         'status': 'Updated',
         'upDatedBy': entryBy,
         'dispatchBy': '-',
+        'dispatchTo': '-',
+        'timestamp': FieldValue.serverTimestamp(),
 
       };
 
@@ -159,6 +162,10 @@ class HomeScreenController extends GetxController {
         'condition': condition,
         'upDatedBy': entryBy,
         'dispatchBy': '-',
+        'dispatchTo': '-',
+
+
+        'timestamp': FieldValue.serverTimestamp(),
       };
 
       await fireStore
@@ -206,6 +213,7 @@ class HomeScreenController extends GetxController {
       selectedItem.value = '';
       selectedDate.value = '';
       itemSelectIndex.value = -1;
+      dispatchC.clear();
     } catch (e) {
       ErrorSnackbar.show(title: failed, message: "Failed to add item: $e");
       print(e.toString());
@@ -224,7 +232,7 @@ class HomeScreenController extends GetxController {
     final quantity = quantityC.text.trim();
     final model = modelC.text.trim();
     final condition = conditionC.text.trim();
-
+    final dispatchTo = dispatchC.text.trim();
     int? parsCost = int.tryParse(cost);
     int? parsQuan = int.tryParse(quantity);
     int finalCost = upCost - parsCost!;
@@ -257,12 +265,13 @@ class HomeScreenController extends GetxController {
         'itemCost': cost,
         'itemQuantity': quantity,
         'entryDate': selectedDate.value,
-        'entryBy': entryBy,
+        'entryBy': '-',
         'dispatchBy': entryBy,
         'condition': condition,
         'status': 'Dispatched',
-        'upDatedBy': entryBy,
-
+        'upDatedBy': '-',
+        'dispatchTo': dispatchTo,
+        'timestamp': FieldValue.serverTimestamp(),
       };
 
       await fireStore
@@ -290,8 +299,10 @@ class HomeScreenController extends GetxController {
         'entryDate': selectedDate.value,
         'entryBy': entryBy,
         'condition': condition,
-        'upDatedBy': entryBy,
+        'upDatedBy': "-",
         'dispatchBy': entryBy,
+        'dispatchTo': dispatchTo,
+        'timestamp': FieldValue.serverTimestamp(),
 
       };
 
@@ -311,7 +322,7 @@ class HomeScreenController extends GetxController {
               .where(
                 'serialNo',
                 isEqualTo: serial,
-              ) // Use a unique field like serialNo
+              )
               .get();
 
       if (querySnapshot.docs.isNotEmpty) {
@@ -340,6 +351,8 @@ class HomeScreenController extends GetxController {
       selectedItem.value = '';
       selectedDate.value = '';
       itemSelectIndex.value = -1;
+      dispatchC.clear();
+
     } catch (e) {
       ErrorSnackbar.show(title: failed, message: "Failed to add item: $e");
       print(e.toString());
@@ -347,115 +360,4 @@ class HomeScreenController extends GetxController {
       isLoading.value = false;
     }
   }
-
-  // Future<void> updateAvailableStock(String id, int upCost,int upQau) async {
-  //   if (!validateInputs()) return;
-  //
-  //   isLoading.value = true;
-  //   final name = nameC.text.trim();
-  //   final serial = serialNoC.text.trim();
-  //   final cost = costC.text.trim();
-  //   final quantity = quantityC.text.trim();
-  //   final model = modelC.text.trim();
-  //   final condition = conditionC.text.trim();
-  //
-  //   final parsCost = int.tryParse(cost);
-  //   final parsQuan = int.tryParse(quantity);
-  //   final finalCost = parsCost! + upCost;
-  //   final finalQuan = parsQuan! + upQau;
-  //
-  //   try {
-  //     DocumentSnapshot userDoc =
-  //     await fireStore.collection('users').doc(auth).get();
-  //     String entryBy =
-  //     userDoc.exists ? userDoc['name'] ?? 'Unknown User' : 'Unknown User';
-  //
-  //     Map<int, String> itemCollections = {
-  //       0: 'switches',
-  //       1: 'routers',
-  //       2: 'firewalls',
-  //       3: 'servers',
-  //       4: 'others',
-  //     };
-  //
-  //     String collectionName = itemCollections[itemSelectIndex.value] ?? '';
-  //
-  //     // 🔹 Add history record
-  //     String itemType = list[itemSelectIndex.value];
-  //
-  //     Map<String, dynamic> historyData = {
-  //       'itemType': itemType,
-  //       'itemName': name,
-  //       'serialNo': serial,
-  //       'modelNo': model,
-  //       'itemCost': finalCost,
-  //       'itemQuantity': finalQuan,
-  //       'entryDate': selectedDate.value,
-  //       'entryBy': entryBy,
-  //       'condition': condition,
-  //       'status': 'Update',
-  //     };
-  //
-  //     await fireStore
-  //         .collection('allHistory')
-  //         .doc('123')
-  //         .collection('allData')
-  //         .doc()
-  //         .set(historyData);
-  //
-  //     await fireStore
-  //         .collection('allHistory')
-  //         .doc('123')
-  //         .collection(collectionName)
-  //         .doc()
-  //         .set(historyData);
-  //
-  //
-  //     // 🔹 Create new item entry
-  //     Map<String, dynamic> stockData = {
-  //       'itemType': itemType,
-  //       'itemName': name,
-  //       'serialNo': serial,
-  //       'modelNo': model,
-  //       'itemCost': finalCost,
-  //       'itemQuantity': finalQuan,
-  //       'entryDate': selectedDate.value,
-  //       'entryBy': entryBy,
-  //       'condition': condition,
-  //       'upDatedBy': entryBy,
-  //     };
-  //     await fireStore
-  //         .collection('availableStock')
-  //         .doc('456')
-  //         .collection('allStock')
-  //         .doc(id)
-  //         .update(stockData);
-  //
-  //     await fireStore
-  //         .collection('availableStock')
-  //         .doc('456')
-  //         .collection(collectionName)
-  //         .doc()
-  //         .update(stockData);
-  //
-  //
-  //     SuccessSnackbar.show(title: success, message: itemAddedSuccessfully);
-  //
-  //     // Reset fields
-  //     nameC.clear();
-  //     serialNoC.clear();
-  //     costC.clear();
-  //     quantityC.clear();
-  //     modelC.clear();
-  //     conditionC.clear();
-  //     selectedItem.value = '';
-  //     selectedDate.value = '';
-  //     itemSelectIndex.value = -1;
-  //   } catch (e) {
-  //     ErrorSnackbar.show(title: failed, message: "Failed to add item: $e");
-  //     print(e.toString());
-  //   } finally {
-  //     isLoading.value = false;
-  //   }
-  // }
 }
