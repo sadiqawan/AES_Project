@@ -185,7 +185,7 @@ class _DispatchViewState extends State<DispatchView> {
                 10.height,
                 _inPut(
                   'Enter Dispatch To:',
-                  quantity,
+                  'Side location',
                   controller.dispatchC,
                   Icons.confirmation_number_outlined,
                   false,

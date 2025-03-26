@@ -21,167 +21,124 @@ class StockSummaryView extends StatefulWidget {
 class _StockSummaryViewState extends State<StockSummaryView> {
   List<QueryDocumentSnapshot> historyData = [];
 
+  //PDF generator
   Future<void> _generatePDF() async {
-    final pdf = pw.Document();
+    try {
+      final pdf = pw.Document();
 
-    pdf.addPage(
-      pw.Page(
-        build:
-            (pw.Context context) => pw.Column(
-              crossAxisAlignment: pw.CrossAxisAlignment.start,
-              children: [
-                pw.Text(
-                  'Stock Summary Report',
-                  style: pw.TextStyle(
-                    fontSize: 16,
-                    fontWeight: pw.FontWeight.bold,
-                    decoration: pw.TextDecoration.underline,
-                  ),
+      pdf.addPage(
+        pw.Page(
+          build: (pw.Context context) => pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.Text(
+                'Stock Summary Report',
+                style: pw.TextStyle(
+                  fontSize: 16,
+                  fontWeight: pw.FontWeight.bold,
+                  decoration: pw.TextDecoration.underline,
                 ),
-                pw.SizedBox(height: 10),
-                pw.Table.fromTextArray(
-                  headers: [
-                    'Index',
-                    'Type',
-                    'S.No',
-                    'Model',
-                    'Name',
-                    'Status',
-                    'QC',
-                    'Cost',
-                    'AddedBy',
-                    'Date',
-                  ],
-                  headerDecoration: pw.BoxDecoration(color: PdfColors.grey300),
-                  headerStyle: pw.TextStyle(
-                    fontSize: 10,
-                    fontWeight: pw.FontWeight.bold,
-                  ),
-                  cellStyle: pw.TextStyle(fontSize: 9),
-                  data: List.generate(historyData.length, (index) {
-                    var data = historyData[index];
-                    return [
-                      '${index + 1}',
-                      data['itemType'] ?? 'N/A',
-                      data['serialNo'] ?? 'N/A',
-                      data['modelNo'] ?? 'N/A',
-                      data['itemName'] ?? 'N/A',
-                      data['condition'] ?? 'N/A',
-                      data['itemQuantity'].toString(),
-                      data['itemCost'].toString(),
-                      data['entryBy'] ?? 'N/A',
-                      data['entryDate'] ?? 'N/A',
-                    ];
-                  }),
-                  border: pw.TableBorder.all(
-                    color: PdfColors.black,
-                    width: 0.5,
-                  ),
-                  cellAlignment: pw.Alignment.centerLeft,
-                  columnWidths: {
-                    0: pw.FixedColumnWidth(30),
-                    1: pw.FixedColumnWidth(50),
-                    2: pw.FixedColumnWidth(40),
-                    3: pw.FixedColumnWidth(50),
-                    4: pw.FixedColumnWidth(50),
-                    5: pw.FixedColumnWidth(50),
-                    6: pw.FixedColumnWidth(40),
-                    7: pw.FixedColumnWidth(40),
-                    8: pw.FixedColumnWidth(60),
-                    9: pw.FixedColumnWidth(60),
-                  },
+              ),
+              pw.SizedBox(height: 10),
+              pw.TableHelper.fromTextArray(
+                headers: [
+                  'Index',
+                  'Type',
+                  'S.No',
+                  'Model',
+                  'Name',
+                  'Status',
+                  'QC',
+                  'Cost',
+                  'AddedBy',
+                  'Date',
+                ],
+                headerDecoration: pw.BoxDecoration(color: PdfColors.grey300),
+                headerStyle: pw.TextStyle(
+                  fontSize: 10,
+                  fontWeight: pw.FontWeight.bold,
                 ),
-              ],
-            ),
-      ),
-    );
+                cellStyle: pw.TextStyle(fontSize: 9),
+                data: List.generate(historyData.length, (index) {
+                  var data = historyData[index];
+                  return [
+                    '${index + 1}',
+                    data['itemType'] ?? 'N/A',
+                    data['serialNo'] ?? 'N/A',
+                    data['modelNo'] ?? 'N/A',
+                    data['itemName'] ?? 'N/A',
+                    data['condition'] ?? 'N/A',
+                    data['itemQuantity'].toString(),
+                    data['itemCost'].toString(),
+                    data['entryBy'] ?? 'N/A',
+                    data['entryDate'] ?? 'N/A',
+                  ];
+                }),
+                border: pw.TableBorder.all(
+                  color: PdfColors.black,
+                  width: 0.5,
+                ),
+                cellAlignment: pw.Alignment.centerLeft,
+                columnWidths: {
+                  0: pw.FixedColumnWidth(30),
+                  1: pw.FixedColumnWidth(50),
+                  2: pw.FixedColumnWidth(40),
+                  3: pw.FixedColumnWidth(50),
+                  4: pw.FixedColumnWidth(50),
+                  5: pw.FixedColumnWidth(50),
+                  6: pw.FixedColumnWidth(40),
+                  7: pw.FixedColumnWidth(40),
+                  8: pw.FixedColumnWidth(60),
+                  9: pw.FixedColumnWidth(60),
+                },
+              ),
+            ],
+          ),
+        ),
+      );
 
-    final Uint8List pdfBytes = await pdf.save();
+      final Uint8List pdfBytes = await pdf.save();
 
-    if (kIsWeb) {
-      // Web: Use universal_html to create a Blob and download
-      final blob = html.Blob([pdfBytes], 'application/pdf');
-      final url = html.Url.createObjectUrlFromBlob(blob);
+      if (kIsWeb) {
+        // Web: Download the file using a Blob
+        final blob = html.Blob([pdfBytes], 'application/pdf');
+        final url = html.Url.createObjectUrlFromBlob(blob);
+        final anchor = html.AnchorElement(href: url)
+          ..setAttribute('download', 'Stock_Summary.pdf')
+          ..click();
+        html.Url.revokeObjectUrl(url);
+      } else {
+        // Mobile/Desktop: Save the file locally
+        late String filePath;
+        if (Platform.isAndroid || Platform.isIOS) {
+          final directory = await getApplicationDocumentsDirectory();
+          filePath = '${directory.path}/Stock_Summary.pdf';
+        } else if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
+          final directory = await getDownloadsDirectory();
+          if (directory != null) {
+            filePath = '${directory.path}/Stock_Summary.pdf';
+          } else {
+            throw Exception("Failed to find a valid directory.");
+          }
+        } else {
+          throw Exception("Unsupported platform.");
+        }
 
-      final anchor =
-          html.AnchorElement(href: url)
-            ..setAttribute('download', 'Stock_Summary.pdf')
-            ..click();
+        final file = File(filePath);
+        await file.writeAsBytes(pdfBytes);
 
-      html.Url.revokeObjectUrl(url);
-    } else {
-      // Mobile/Desktop: Save the file to local storage
-      final directory = await getApplicationDocumentsDirectory();
-      final filePath = '${directory.path}/Stock_Summary.pdf';
-      final file = File(filePath);
-      await file.writeAsBytes(pdfBytes);
+        // Open PDF or Share it
+        await Printing.sharePdf(bytes: pdfBytes, filename: 'Stock_Summary.pdf');
+      }
 
-      // Open the PDF using Printing package
-      await Printing.sharePdf(bytes: pdfBytes, filename: 'Stock_Summary.pdf');
+      print("PDF Generated Successfully!");
+    } catch (e) {
+      print("Error generating PDF: $e");
     }
   }
 
-  /*  Future<void> _generatePDF() async {
-    final pdf = pw.Document();
 
-    pdf.addPage(
-      pw.Page(
-        build:
-            (pw.Context context) => pw.Column(
-              children: [
-                pw.Text(
-                  'Stock Summary Report',
-                  style: pw.TextStyle(
-                    fontSize: 18.sp,
-                    fontWeight: pw.FontWeight.bold,
-                  ),
-                ),
-                pw.SizedBox(height: 10),
-                pw.Table.fromTextArray(
-                  headers: [
-                    'Index',
-                    'Type',
-                    'S.No',
-                    'Model',
-                    'Name',
-                    'Condition',
-                    'Quantity',
-                    'Cost',
-                    'Added By',
-                    'Date',
-                  ],
-                  headerAlignment: pw.Alignment.center,
-                  data: List.generate(historyData.length, (index) {
-                    var data = historyData[index];
-                    return [
-                      '${index + 1}',
-                      data['itemType'] ?? 'N/A',
-                      data['serialNo'] ?? 'N/A',
-                      data['modelNo'] ?? 'N/A',
-                      data['itemName'] ?? 'N/A',
-                      data['condition'] ?? 'N/A',
-                      data['itemQuantity'].toString(),
-                      data['itemCost'].toString(),
-                      data['entryBy'] ?? 'N/A',
-                      data['entryDate'] ?? 'N/A',
-                    ];
-                  }),
-                ),
-              ],
-            ),
-      ),
-    );
 
-    final output = await getExternalStorageDirectory();
-    final file = File('${output!.path}/Stock_Summary.pdf');
-    await file.writeAsBytes(await pdf.save());
-
-    // Open or Share the PDF
-    await Printing.sharePdf(
-      bytes: await pdf.save(),
-      filename: 'Stock_Summary.pdf',
-    );
-  }*/
 
   @override
   Widget build(BuildContext context) {
