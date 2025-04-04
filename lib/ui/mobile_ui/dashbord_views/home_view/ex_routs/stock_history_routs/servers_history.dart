@@ -36,7 +36,9 @@ Widget _screen(BuildContext context) {
 
         var historyData = snapshot.data!.docs;
 
-        return SingleChildScrollView(
+        return ListView(
+          children: [
+          SingleChildScrollView(
           scrollDirection: Axis.horizontal, // Allow horizontal scrolling
           child: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -80,6 +82,8 @@ Widget _screen(BuildContext context) {
               }),
             ),
           ),
+        )
+          ],
         );
       },
     ),
