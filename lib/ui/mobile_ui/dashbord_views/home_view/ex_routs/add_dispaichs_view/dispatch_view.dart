@@ -52,25 +52,43 @@ class _DispatchViewState extends State<DispatchView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 15.height,
-                Text('Type:       ${widget.type}', style: kSubTitle1),
-                5.height,
-                Text('Name:       ${widget.name}', style: kSubTitle1),
-                5.height,
-                Text('S.No:       ${widget.sNo}', style: kSubTitle1),
-                5.height,
-                Text('Model:      ${widget.model}', style: kSubTitle1),
-                5.height,
-                Text('Quantity:   ${widget.quantity}', style: kSubTitle1),
-                5.height,
-                Text('Cost:       ${widget.cost}', style: kSubTitle1),
-                15.height,
-                // Removed Flexible
-                const Text(
-                  'Enter Following fields for Update Available Stock.',
+
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
+                  margin: EdgeInsets.symmetric(horizontal: 2.w),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12.sp),
+                    boxShadow: [
+                      BoxShadow(
+                        color: kSecondaryColor,
+                        blurRadius: 10,
+                        offset: Offset(1, 7),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildInfoRow('Type', widget.type),
+                      5.height,
+                      _buildInfoRow('Name', widget.name),
+                      5.height,
+                      _buildInfoRow('S.No', widget.sNo),
+                      5.height,
+                      _buildInfoRow('Model', widget.model),
+                      5.height,
+                      _buildInfoRow('Current Quantity', widget.quantity),
+                      5.height,
+                      _buildInfoRow('Current Cost', widget.cost),
+                    ],
+                  ),
                 ),
-                const Text('Type,Name,Model and S.No must be same.'),
                 20.height,
 
+                _buildInfoRow('Alert', 'Enter correct type of Item'),
+                5.height,
                 // Dropdown
                 DropdownButtonFormField<String>(
                   dropdownColor: kSecondaryColor,
@@ -106,56 +124,29 @@ class _DispatchViewState extends State<DispatchView> {
                 ),
                 8.height,
 
-                // Responsive Form Fields
-                isLandscape
-                    ? Row(
-                      children: [
-                        Expanded(
-                          child: _inPut(
-                            enterItemName,
-                            name,
-                            controller.nameC,
-                            Icons.insert_invitation_outlined,
-                            false,
-                          ),
-                        ),
-                        5.width,
-                        Expanded(
-                          child: _inPut(
-                            enterSerialNo,
-                            sNo,
-                            controller.serialNoC,
-                            Icons.segment_rounded,
-                            false,
-                          ),
-                        ),
-                      ],
-                    )
-                    : Column(
-                      children: [
-                        _inPut(
-                          enterItemName,
-                          name,
-                          controller.nameC,
-                          Icons.insert_invitation_outlined,
-                          false,
-                        ),
-                        10.height,
-                        _inPut(
-                          enterSerialNo,
-                          sNo,
-                          controller.serialNoC,
-                          Icons.segment_rounded,
-                          false,
-                        ),
-                      ],
-                    ),
                 10.height,
                 _inPut(
-                  modelNo,
-                  model,
-                  controller.modelC,
-                  Icons.segment_rounded,
+                  enterQuantity,
+                  quantity,
+                  controller.quantityC,
+                  Icons.confirmation_number_outlined,
+                  true,
+                ),
+                10.height,
+                _inPut(
+                  enterCost,
+                  cost,
+                  controller.costC,
+                  Icons.monetization_on_rounded,
+                  true,
+                ),
+
+                10.height,
+                _inPut(
+                  dispatchTo,
+                  sideLocation,
+                  controller.dispatchC,
+                  Icons.confirmation_number_outlined,
                   false,
                 ),
                 10.height,
@@ -167,34 +158,8 @@ class _DispatchViewState extends State<DispatchView> {
                   false,
                 ),
                 10.height,
-                _inPut(
-                  enterCost,
-                  cost,
-                  controller.costC,
-                  Icons.monetization_on_rounded,
-                  true,
-                ),
-                10.height,
-                _inPut(
-                  enterQuantity,
-                  quantity,
-                  controller.quantityC,
-                  Icons.confirmation_number_outlined,
-                  true,
-                ),
-                10.height,
-                _inPut(
-                  'Enter Dispatch To:',
-                  'Side location',
-                  controller.dispatchC,
-                  Icons.confirmation_number_outlined,
-                  false,
-                ),
-                10.height,
-                Text(
-                  dateOfEntry,
-                  style: kSmallTitle1.copyWith(fontSize: 17.sp),
-                ),
+
+                Text(dateOfExit, style: kSmallTitle1.copyWith(fontSize: 17.sp)),
                 5.height,
                 CustomButton(
                   title:
@@ -209,9 +174,13 @@ class _DispatchViewState extends State<DispatchView> {
                   title: controller.isLoading.value ? submitting : submit,
                   onTap: () {
                     controller.dispatchAvailableStock(
+                      context,
                       widget.id,
                       upCost!,
                       upQuan!,
+                      widget.name,
+                      widget.sNo,
+                      widget.model,
                     );
                   },
                 ),
@@ -225,14 +194,13 @@ class _DispatchViewState extends State<DispatchView> {
   }
 }
 
-
 Widget _inPut(
-    String title,
-    String hint,
-    TextEditingController controller,
-    IconData icon,
-    bool keyBordTypeNumber,
-    ) {
+  String title,
+  String hint,
+  TextEditingController controller,
+  IconData icon,
+  bool keyBordTypeNumber,
+) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -242,8 +210,18 @@ Widget _inPut(
         controller: controller,
         icon: icon,
         keyboardType:
-        keyBordTypeNumber ? TextInputType.number : TextInputType.text,
+            keyBordTypeNumber ? TextInputType.number : TextInputType.text,
       ),
     ],
+  );
+}
+
+Widget _buildInfoRow(String title, String value) {
+  return RichText(
+    text: TextSpan(
+      text: '$title:   ',
+      style: kSubTitle1?.copyWith(fontWeight: FontWeight.bold),
+      children: [TextSpan(text: value, style: kSubTitle1.copyWith(fontSize: 16.sp))],
+    ),
   );
 }
