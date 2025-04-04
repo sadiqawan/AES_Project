@@ -8,6 +8,7 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:path_provider/path_provider.dart';
 import 'package:printing/printing.dart';
+import 'package:sizer/sizer.dart';
 import 'package:universal_html/html.dart' as html;
 
 class AllHistoryView extends StatefulWidget {
@@ -22,68 +23,76 @@ class _AllHistoryViewState extends State<AllHistoryView> {
   Future<void> _generatePDF() async {
     try {
       final pdf = pw.Document();
+
       pdf.addPage(
-        pw.Page(
+        pw.MultiPage(
           pageFormat: PdfPageFormat.a4.landscape,
-          build: (pw.Context context) => pw.Column(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-              pw.Text(
-                'All History Report',
-                style: pw.TextStyle(
-                  fontSize: 14, // Decreased font size
-                  fontWeight: pw.FontWeight.bold,
-                  decoration: pw.TextDecoration.underline,
+          build: (pw.Context context) => [
+            pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [
+                pw.Text(
+                  'All History Report',
+                  style: pw.TextStyle(
+                    fontSize: 14,
+                    fontWeight: pw.FontWeight.bold,
+                    decoration: pw.TextDecoration.underline,
+                  ),
                 ),
-              ),
-              pw.SizedBox(height: 8),
-              pw.TableHelper.fromTextArray(
-                headers: [
-                  'Index', 'Type', 'S.No', 'Model', 'Name', 'Condition',
-                  'Quantity', 'Cost', 'Added By', 'Date', 'Stock Updated By',
-                  'Dispatch By', 'Dispatch To'
-                ],
-                data: List.generate(historyData.length, (index) {
-                  var data = historyData[index];
-                  return [
-                    '${index + 1}',
-                    data['itemType'] ?? 'N/A',
-                    data['serialNo'] ?? 'N/A',
-                    data['modelNo'] ?? 'N/A',
-                    data['itemName'] ?? 'N/A',
-                    data['condition'] ?? 'N/A',
-                    data['itemQuantity'].toString(),
-                    data['itemCost'].toString(),
-                    data['entryBy'] ?? 'N/A',
-                    data['entryDate'] ?? 'N/A',
-                    data['upDatedBy'] ?? 'N/A',
-                    data['dispatchBy'] ?? 'N/A',
-                    data['dispatchTo'] ?? 'N/A',
-                  ];
-                }),
-                border: pw.TableBorder.all(width: 0.5),
-                headerDecoration: pw.BoxDecoration(color: PdfColors.grey300),
-                headerStyle: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold),
-                cellStyle: pw.TextStyle(fontSize: 8), // Decreased font size
-                cellAlignment: pw.Alignment.centerLeft,
-                columnWidths: {
-                  0: pw.FixedColumnWidth(30),  // Index
-                  1: pw.FixedColumnWidth(50),  // Type
-                  2: pw.FixedColumnWidth(40),  // S.No
-                  3: pw.FixedColumnWidth(50),  // Model
-                  4: pw.FixedColumnWidth(60),  // Name
-                  5: pw.FixedColumnWidth(50),  // Condition
-                  6: pw.FixedColumnWidth(40),  // Quantity
-                  7: pw.FixedColumnWidth(50),  // Cost
-                  8: pw.FixedColumnWidth(60),  // Added By
-                  9: pw.FixedColumnWidth(50),  // Date
-                  10: pw.FixedColumnWidth(60), // Stock Updated By
-                  11: pw.FixedColumnWidth(60), // Dispatch By
-                  12: pw.FixedColumnWidth(60), // Dispatch To
-                },
-              ),
-            ],
-          ),
+                pw.SizedBox(height: 4),
+                pw.Text(
+                  "Printed at: ${DateTime.now().toString()}",
+                  style: pw.TextStyle(fontSize: 10),
+                ),
+                pw.SizedBox(height: 10),
+              ],
+            ),
+            pw.TableHelper.fromTextArray(
+              headers: [
+                'Index', 'Type', 'S.No', 'Model', 'Name', 'Condition',
+                'Quantity', 'Cost', 'Added By', 'Date', 'Stock Updated By',
+                'Dispatch By', 'Dispatch To'
+              ],
+              data: List.generate(historyData.length, (index) {
+                var data = historyData[index];
+                return [
+                  '${index + 1}',
+                  data['itemType'] ?? 'N/A',
+                  data['serialNo'] ?? 'N/A',
+                  data['modelNo'] ?? 'N/A',
+                  data['itemName'] ?? 'N/A',
+                  data['condition'] ?? 'N/A',
+                  data['itemQuantity'].toString(),
+                  data['itemCost'].toString(),
+                  data['entryBy'] ?? 'N/A',
+                  data['entryDate'] ?? 'N/A',
+                  data['upDatedBy'] ?? 'N/A',
+                  data['dispatchBy'] ?? 'N/A',
+                  data['dispatchTo'] ?? 'N/A',
+                ];
+              }),
+              border: pw.TableBorder.all(width: 0.5),
+              headerDecoration: pw.BoxDecoration(color: PdfColors.grey300),
+              headerStyle: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold),
+              cellStyle: pw.TextStyle(fontSize: 8),
+              cellAlignment: pw.Alignment.centerLeft,
+              columnWidths: {
+                0: pw.FixedColumnWidth(30),
+                1: pw.FixedColumnWidth(50),
+                2: pw.FixedColumnWidth(40),
+                3: pw.FixedColumnWidth(50),
+                4: pw.FixedColumnWidth(60),
+                5: pw.FixedColumnWidth(50),
+                6: pw.FixedColumnWidth(40),
+                7: pw.FixedColumnWidth(50),
+                8: pw.FixedColumnWidth(60),
+                9: pw.FixedColumnWidth(50),
+                10: pw.FixedColumnWidth(60),
+                11: pw.FixedColumnWidth(60),
+                12: pw.FixedColumnWidth(60),
+              },
+            ),
+          ],
         ),
       );
 
@@ -119,6 +128,7 @@ class _AllHistoryViewState extends State<AllHistoryView> {
       print("Error generating PDF: $e");
     }
   }
+
 
 
   @override

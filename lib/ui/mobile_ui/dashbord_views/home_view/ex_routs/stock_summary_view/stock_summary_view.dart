@@ -7,6 +7,7 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:path_provider/path_provider.dart';
 import 'package:printing/printing.dart';
+import 'package:sizer/sizer.dart';
 import 'package:universal_html/html.dart' as html;
 import '../../../../../../constant/cont_colors.dart';
 
@@ -18,100 +19,99 @@ class StockSummaryView extends StatefulWidget {
 }
 
 class _StockSummaryViewState extends State<StockSummaryView> {
-  List<QueryDocumentSnapshot> historyData = [];
+  List<QueryDocumentSnapshot> summaryData = [];
 
-  //PDF generator
   Future<void> _generatePDF() async {
     try {
       final pdf = pw.Document();
 
       pdf.addPage(
-        pw.Page(
-          build:
-              (pw.Context context) => pw.Column(
-                crossAxisAlignment: pw.CrossAxisAlignment.start,
-                children: [
-                  pw.Text(
-                    'Stock Summary Report',
-                    style: pw.TextStyle(
-                      fontSize: 16,
-                      fontWeight: pw.FontWeight.bold,
-                      decoration: pw.TextDecoration.underline,
-                    ),
-                  ),
-                  pw.SizedBox(height: 10),
-                  pw.TableHelper.fromTextArray(
-                    headers: [
-                      'Index',
-                      'Type',
-                      'S.No',
-                      'Model',
-                      'Name',
-                      'Status',
-                      'QC',
-                      'Cost',
-                      'AddedBy',
-                      'Date',
-                    ],
-                    headerDecoration: pw.BoxDecoration(
-                      color: PdfColors.grey300,
-                    ),
-                    headerStyle: pw.TextStyle(
-                      fontSize: 10,
-                      fontWeight: pw.FontWeight.bold,
-                    ),
-                    cellStyle: pw.TextStyle(fontSize: 9),
-                    data: List.generate(historyData.length, (index) {
-                      var data = historyData[index];
-                      return [
-                        '${index + 1}',
-                        data['itemType'] ?? 'N/A',
-                        data['serialNo'] ?? 'N/A',
-                        data['modelNo'] ?? 'N/A',
-                        data['itemName'] ?? 'N/A',
-                        data['condition'] ?? 'N/A',
-                        data['itemQuantity'].toString(),
-                        data['itemCost'].toString(),
-                        data['entryBy'] ?? 'N/A',
-                        data['entryDate'] ?? 'N/A',
-                      ];
-                    }),
-                    border: pw.TableBorder.all(
-                      color: PdfColors.black,
-                      width: 0.5,
-                    ),
-                    cellAlignment: pw.Alignment.centerLeft,
-                    columnWidths: {
-                      0: pw.FixedColumnWidth(30),
-                      1: pw.FixedColumnWidth(50),
-                      2: pw.FixedColumnWidth(40),
-                      3: pw.FixedColumnWidth(50),
-                      4: pw.FixedColumnWidth(50),
-                      5: pw.FixedColumnWidth(50),
-                      6: pw.FixedColumnWidth(40),
-                      7: pw.FixedColumnWidth(40),
-                      8: pw.FixedColumnWidth(60),
-                      9: pw.FixedColumnWidth(60),
-                    },
-                  ),
-                ],
+        pw.MultiPage(
+          pageFormat: PdfPageFormat.a4,
+
+          build: (pw.Context context) => [
+            pw.Text(
+              'AZOURE Stock Summary Report',
+              style: pw.TextStyle(
+                fontSize: 16,
+                fontWeight: pw.FontWeight.bold,
+                decoration: pw.TextDecoration.underline,
               ),
+            ),
+            pw.SizedBox(height: 5),
+            pw.Text(
+              "Printed at: ${DateTime.now().toString()}",
+              style: pw.TextStyle(fontSize: 10),
+            ),
+            pw.SizedBox(height: 10),
+            pw.TableHelper.fromTextArray(
+              headers: [
+                'Index',
+                'Type',
+                'S.No',
+                'Model',
+                'Name',
+                'Status',
+                'QC',
+                'Cost',
+                'AddedBy',
+                'Date',
+              ],
+              headerDecoration: pw.BoxDecoration(
+                color: PdfColors.grey300,
+              ),
+              headerStyle: pw.TextStyle(
+                fontSize: 10,
+                fontWeight: pw.FontWeight.bold,
+              ),
+              cellStyle: pw.TextStyle(fontSize: 9),
+              data: List.generate(summaryData.length, (index) {
+                var data = summaryData[index];
+                return [
+                  '${index + 1}',
+                  data['itemType'] ?? 'N/A',
+                  data['serialNo'] ?? 'N/A',
+                  data['modelNo'] ?? 'N/A',
+                  data['itemName'] ?? 'N/A',
+                  data['condition'] ?? 'N/A',
+                  data['itemQuantity'].toString(),
+                  data['itemCost'].toString(),
+                  data['entryBy'] ?? 'N/A',
+                  data['entryDate'] ?? 'N/A',
+                ];
+              }),
+              border: pw.TableBorder.all(
+                color: PdfColors.black,
+                width: 0.5,
+              ),
+              cellAlignment: pw.Alignment.centerLeft,
+              columnWidths: {
+                0: pw.FixedColumnWidth(30),
+                1: pw.FixedColumnWidth(50),
+                2: pw.FixedColumnWidth(40),
+                3: pw.FixedColumnWidth(50),
+                4: pw.FixedColumnWidth(50),
+                5: pw.FixedColumnWidth(50),
+                6: pw.FixedColumnWidth(40),
+                7: pw.FixedColumnWidth(40),
+                8: pw.FixedColumnWidth(60),
+                9: pw.FixedColumnWidth(60),
+              },
+            ),
+          ],
         ),
       );
 
       final Uint8List pdfBytes = await pdf.save();
 
       if (kIsWeb) {
-        // Web: Download the file using a Blob
         final blob = html.Blob([pdfBytes], 'application/pdf');
         final url = html.Url.createObjectUrlFromBlob(blob);
-        final anchor =
-            html.AnchorElement(href: url)
-              ..setAttribute('download', 'Stock_Summary.pdf')
-              ..click();
+        final anchor = html.AnchorElement(href: url)
+          ..setAttribute('download', 'Stock_Summary.pdf')
+          ..click();
         html.Url.revokeObjectUrl(url);
       } else {
-        // Mobile/Desktop: Save the file locally
         late String filePath;
         if (Platform.isAndroid || Platform.isIOS) {
           final directory = await getApplicationDocumentsDirectory();
@@ -129,8 +129,6 @@ class _StockSummaryViewState extends State<StockSummaryView> {
 
         final file = File(filePath);
         await file.writeAsBytes(pdfBytes);
-
-        // Open PDF or Share it
         await Printing.sharePdf(bytes: pdfBytes, filename: 'Stock_Summary.pdf');
       }
 
@@ -139,6 +137,7 @@ class _StockSummaryViewState extends State<StockSummaryView> {
       print("Error generating PDF: $e");
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -162,7 +161,7 @@ class _StockSummaryViewState extends State<StockSummaryView> {
             return const Center(child: Text('No Data Available'));
           }
 
-          historyData = snapshot.data!.docs;
+          summaryData = snapshot.data!.docs;
 
           return ListView(
             children: [
@@ -184,8 +183,8 @@ class _StockSummaryViewState extends State<StockSummaryView> {
                       DataColumn(label: Text('Added By')),
                       DataColumn(label: Text('Date')),
                     ],
-                    rows: List.generate(historyData.length, (index) {
-                      var data = historyData[index];
+                    rows: List.generate(summaryData.length, (index) {
+                      var data = summaryData[index];
                       return DataRow(
                         cells: [
                           DataCell(Text('${index + 1}')),
