@@ -157,13 +157,30 @@ class HomeScreenController extends GetxController {
         'dispatchTo': '-',
         'timestamp': FieldValue.serverTimestamp(),
       };
-
+      QuerySnapshot querySnapshot1 =
       await fireStore
           .collection('availableStock')
           .doc('456')
           .collection('allStock')
-          .doc(id)
-          .update(stockData);
+          .where('serialNo', isEqualTo: serial)
+          .where('modelNo', isEqualTo: model)
+          .where('itemName', isEqualTo: name)
+          .get();
+
+
+      if (querySnapshot1.docs.isNotEmpty) {
+        String docId = querySnapshot1.docs.first.id;
+
+        await fireStore
+            .collection('availableStock')
+            .doc('456')
+            .collection('allStock')
+            .doc(docId)
+            .update(stockData);
+      } else {
+        print("No matching document found for update.");
+      }
+
 
       // 🔹 **Find and Update the Document Dynamically in collectionName**
       QuerySnapshot querySnapshot =
@@ -299,13 +316,35 @@ class HomeScreenController extends GetxController {
         'dispatchTo': dispatchTo,
         'timestamp': FieldValue.serverTimestamp(),
       };
-
+      QuerySnapshot querySnapshot1 =
       await fireStore
           .collection('availableStock')
           .doc('456')
           .collection('allStock')
-          .doc(id)
-          .update(stockData);
+          .where('serialNo', isEqualTo: serial)
+          .where('modelNo', isEqualTo: model)
+          .where('itemName', isEqualTo: name)
+          .get();
+
+
+      if (querySnapshot1.docs.isNotEmpty) {
+        String docId = querySnapshot1.docs.first.id;
+
+        await fireStore
+            .collection('availableStock')
+            .doc('456')
+            .collection('allStock')
+            .doc(docId)
+            .update(stockData);
+      } else {
+        print("No matching document found for update.");
+      }
+      // await fireStore
+      //     .collection('availableStock')
+      //     .doc('456')
+      //     .collection('allStock')
+      //     .doc(id)
+      //     .update(stockData);
 
       // 🔹 **Find and Update the Document Dynamically in collectionName**
       QuerySnapshot querySnapshot =
@@ -316,7 +355,6 @@ class HomeScreenController extends GetxController {
               .where('serialNo', isEqualTo: serial)
               .where('modelNo', isEqualTo: model)
               .where('itemName', isEqualTo: name)
-              .where('condition', isEqualTo: condition)
               .get();
       if (querySnapshot.docs.isNotEmpty) {
         String docId = querySnapshot.docs.first.id;
