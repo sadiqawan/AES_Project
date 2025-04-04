@@ -1,6 +1,7 @@
 import 'package:ase/constant/assets.dart';
 import 'package:ase/constant/cont_text.dart';
 import 'package:ase/extensions/size_box.dart';
+import 'package:ase/ui/mobile_ui/dashbord_views/home_view/ex_routs/add_dispaichs_view/available_data_view.dart';
 import 'package:ase/ui/mobile_ui/dashbord_views/home_view/ex_routs/stock_summary_view/stock_summary_view.dart';
 import 'package:ase/widgets/card_button.dart';
 import 'package:flutter/material.dart';
@@ -80,7 +81,8 @@ Widget _screen(BuildContext context) {
                 ),
                 CardButton(
                   onTap: () {
-                    Get.to(() => AddDispatchView());
+                    // Get.to(() => AddDispatchView());
+                    Get.to(() => AvailableDataView());
                   },
                   icon: Icons.recycling,
                   title: stockDispatch,

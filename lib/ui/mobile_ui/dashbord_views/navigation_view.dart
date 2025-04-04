@@ -31,7 +31,7 @@ class NavigationView extends StatelessWidget {
         children: bottomBarPages,
         onPageChanged: (index) {
           appController.selectedIndex.value = index;
-          _controller.jumpTo(index); // Synchronize Bottom Navigation Bar
+          _controller.jumpTo(index);
         },
       ),
       extendBody: true,
@@ -48,7 +48,7 @@ class NavigationView extends StatelessWidget {
         bottomBarWidth: Get.width,
         showShadow: true,
         durationInMilliSeconds: 300,
-        itemLabelStyle: TextStyle(fontSize: 14.sp),
+        itemLabelStyle: TextStyle(fontSize: 10.sp),
         elevation: 2,
         kIconSize: 24.0,
         bottomBarItems: [

@@ -52,26 +52,42 @@ class _AddViewState extends State<AddView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 15.height,
-                Text('Type:       ${widget.type}', style: kSubTitle1),
-                5.height,
-                Text('Name:       ${widget.name}', style: kSubTitle1),
-                5.height,
-                Text('S.No:       ${widget.sNo}', style: kSubTitle1),
-                5.height,
-
-                Text('Model:      ${widget.model}', style: kSubTitle1),
-
-                5.height,
-                Text('Quantity:   ${widget.quantity}', style: kSubTitle1),
-                5.height,
-                Text('Cost:       ${widget.cost}', style: kSubTitle1),
-                15.height,
-                // Removed Flexible
-                const Text(
-                  'Enter Following fields for Update Available Stock.',
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
+                  margin: EdgeInsets.symmetric(horizontal: 2.w),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12.sp),
+                    boxShadow: [
+                      BoxShadow(
+                        color: kSecondaryColor,
+                        blurRadius: 10,
+                        offset: Offset(1, 7),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildInfoRow('Type', widget.type),
+                      5.height,
+                      _buildInfoRow('Name', widget.name),
+                      5.height,
+                      _buildInfoRow('S.No', widget.sNo),
+                      5.height,
+                      _buildInfoRow('Model', widget.model),
+                      5.height,
+                      _buildInfoRow('Current Quantity', widget.quantity),
+                      5.height,
+                      _buildInfoRow('Current Cost', widget.cost),
+                    ],
+                  ),
                 ),
-                const Text('Type,Name,Model and S.No must be same.'),
-                20.height,
+                15.height,
+                _buildInfoRow('Alert', 'Enter correct type of Item'),
+                5.height,
+
 
                 // Dropdown
                 DropdownButtonFormField<String>(
@@ -106,68 +122,17 @@ class _AddViewState extends State<AddView> {
                     contentPadding: EdgeInsets.symmetric(horizontal: 5.w),
                   ),
                 ),
-                8.height,
 
-                // Responsive Form Fields
-                isLandscape
-                    ? Row(
-                      children: [
-                        Expanded(
-                          child: _inPut(
-                            enterItemName,
-                            name,
-                            controller.nameC,
-                            Icons.insert_invitation_outlined,
-                            false,
-                          ),
-                        ),
-                        5.width,
-                        Expanded(
-                          child: _inPut(
-                            enterSerialNo,
-                            sNo,
-                            controller.serialNoC,
-                            Icons.segment_rounded,
-                            false,
-                          ),
-                        ),
-                      ],
-                    )
-                    : Column(
-                      children: [
-                        _inPut(
-                          enterItemName,
-                          name,
-                          controller.nameC,
-                          Icons.insert_invitation_outlined,
-                          false,
-                        ),
-                        10.height,
-                        _inPut(
-                          enterSerialNo,
-                          sNo,
-                          controller.serialNoC,
-                          Icons.segment_rounded,
-                          false,
-                        ),
-                      ],
-                    ),
+
                 10.height,
                 _inPut(
-                  modelNo,
-                  model,
-                  controller.modelC,
-                  Icons.segment_rounded,
-                  false,
+                  enterQuantity,
+                  quantity,
+                  controller.quantityC,
+                  Icons.confirmation_number_outlined,
+                  true,
                 ),
-                10.height,
-                _inPut(
-                  enterCondition,
-                  condition,
-                  controller.conditionC,
-                  Icons.new_releases_outlined,
-                  false,
-                ),
+
                 10.height,
                 _inPut(
                   enterCost,
@@ -176,13 +141,14 @@ class _AddViewState extends State<AddView> {
                   Icons.monetization_on_rounded,
                   true,
                 ),
+
                 10.height,
                 _inPut(
-                  enterQuantity,
-                  quantity,
-                  controller.quantityC,
-                  Icons.confirmation_number_outlined,
-                  true,
+                  enterCondition,
+                  condition,
+                  controller.conditionC,
+                  Icons.new_releases_outlined,
+                  false,
                 ),
                 10.height,
                 Text(
@@ -203,13 +169,17 @@ class _AddViewState extends State<AddView> {
                   title: controller.isLoading.value ? submitting : submit,
                   onTap: () {
                     controller.updateAvailableStock(
+                      context,
                       widget.id,
                       upCost!,
                       upQuan!,
+                      widget.name,
+                      widget.sNo,
+                      widget.model,
                     );
                   },
                 ),
-                30.height
+                30.height,
               ],
             ),
           ),
@@ -238,5 +208,15 @@ Widget _inPut(
             keyBordTypeNumber ? TextInputType.number : TextInputType.text,
       ),
     ],
+  );
+}
+
+Widget _buildInfoRow(String title, String value) {
+  return RichText(
+    text: TextSpan(
+      text: '$title:   ',
+      style: kSubTitle1?.copyWith(fontWeight: FontWeight.bold),
+      children: [TextSpan(text: value, style: kSubTitle1.copyWith(fontSize: 16.sp))],
+    ),
   );
 }

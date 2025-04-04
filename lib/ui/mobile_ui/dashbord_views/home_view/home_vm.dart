@@ -8,11 +8,7 @@ import '../../../../widgets/custom_snakBar.dart';
 class HomeScreenController extends GetxController {
   final auth = FirebaseAuth.instance.currentUser!.uid;
   final fireStore = FirebaseFirestore.instance;
-
-  TextEditingController nameC = TextEditingController();
-  TextEditingController serialNoC = TextEditingController();
   TextEditingController costC = TextEditingController();
-  TextEditingController modelC = TextEditingController();
   TextEditingController quantityC = TextEditingController();
   TextEditingController conditionC = TextEditingController();
   TextEditingController dispatchC = TextEditingController();
@@ -45,18 +41,7 @@ class HomeScreenController extends GetxController {
       ErrorSnackbar.show(title: failed, message: pleaseSelectItem);
       return false;
     }
-    if (nameC.text.trim().isEmpty) {
-      ErrorSnackbar.show(title: failed, message: pleaseEnterNameOfItem);
-      return false;
-    }
-    if (serialNoC.text.trim().isEmpty) {
-      ErrorSnackbar.show(title: failed, message: pleaseEnterSerialNo);
-      return false;
-    }
-    if (modelC.text.trim().isEmpty) {
-      ErrorSnackbar.show(title: failed, message: pleaseEnterModelNo);
-      return false;
-    }
+
     if (conditionC.text.trim().isEmpty) {
       ErrorSnackbar.show(title: failed, message: pleaseConditionOfItem);
       return false;
@@ -82,15 +67,23 @@ class HomeScreenController extends GetxController {
     return true;
   }
 
-  Future<void> updateAvailableStock(String id, int upCost, int upQau) async {
+  Future<void> updateAvailableStock(
+    BuildContext context,
+    String id,
+    int upCost,
+    int upQau,
+    String nameItem,
+    String serialNo,
+    String ItemModel,
+  ) async {
     if (!validateInputs()) return;
 
     isLoading.value = true;
-    final name = nameC.text.trim();
-    final serial = serialNoC.text.trim();
+    final name = nameItem;
+    final serial = serialNo;
     final cost = costC.text.trim();
     final quantity = quantityC.text.trim();
-    final model = modelC.text.trim();
+    final model = ItemModel;
     final condition = conditionC.text.trim();
 
     final parsCost = int.tryParse(cost);
@@ -132,7 +125,6 @@ class HomeScreenController extends GetxController {
         'dispatchBy': '-',
         'dispatchTo': '-',
         'timestamp': FieldValue.serverTimestamp(),
-
       };
 
       await fireStore
@@ -163,8 +155,6 @@ class HomeScreenController extends GetxController {
         'upDatedBy': entryBy,
         'dispatchBy': '-',
         'dispatchTo': '-',
-
-
         'timestamp': FieldValue.serverTimestamp(),
       };
 
@@ -181,15 +171,13 @@ class HomeScreenController extends GetxController {
               .collection('availableStock')
               .doc('456')
               .collection(collectionName)
-              .where(
-                'serialNo',
-                isEqualTo: serial,
-              ) // Use a unique field like serialNo
+              .where('serialNo', isEqualTo: serial)
+              .where('modelNo', isEqualTo: model)
+              .where('itemName', isEqualTo: name)
               .get();
 
       if (querySnapshot.docs.isNotEmpty) {
-        String docId =
-            querySnapshot.docs.first.id; // Get the document ID dynamically
+        String docId = querySnapshot.docs.first.id;
 
         await fireStore
             .collection('availableStock')
@@ -201,14 +189,11 @@ class HomeScreenController extends GetxController {
         print("No matching document found for update.");
       }
 
-      SuccessSnackbar.show(title: success, message: itemUpdatedSuccessfully);
 
-      // Reset fields
-      nameC.clear();
-      serialNoC.clear();
+      SuccessSnackbar.show(title: success, message: itemUpdatedSuccessfully);
+      Navigator.pop(context);
       costC.clear();
       quantityC.clear();
-      modelC.clear();
       conditionC.clear();
       selectedItem.value = '';
       selectedDate.value = '';
@@ -222,15 +207,25 @@ class HomeScreenController extends GetxController {
     }
   }
 
-  Future<void> dispatchAvailableStock(String id, int upCost, int upQau) async {
+  //dispatch data
+  Future<void> dispatchAvailableStock(
+    BuildContext context,
+    String id,
+    int upCost,
+    int upQau,
+    String nameItem,
+    String serialNo,
+    String ItemModel,
+  ) async {
     if (!validateInputs()) return;
 
     isLoading.value = true;
-    final name = nameC.text.trim();
-    final serial = serialNoC.text.trim();
+    isLoading.value = true;
+    final name = nameItem;
+    final serial = serialNo;
     final cost = costC.text.trim();
     final quantity = quantityC.text.trim();
-    final model = modelC.text.trim();
+    final model = ItemModel;
     final condition = conditionC.text.trim();
     final dispatchTo = dispatchC.text.trim();
     int? parsCost = int.tryParse(cost);
@@ -303,7 +298,6 @@ class HomeScreenController extends GetxController {
         'dispatchBy': entryBy,
         'dispatchTo': dispatchTo,
         'timestamp': FieldValue.serverTimestamp(),
-
       };
 
       await fireStore
@@ -319,15 +313,13 @@ class HomeScreenController extends GetxController {
               .collection('availableStock')
               .doc('456')
               .collection(collectionName)
-              .where(
-                'serialNo',
-                isEqualTo: serial,
-              )
+              .where('serialNo', isEqualTo: serial)
+              .where('modelNo', isEqualTo: model)
+              .where('itemName', isEqualTo: name)
+              .where('condition', isEqualTo: condition)
               .get();
-
       if (querySnapshot.docs.isNotEmpty) {
-        String docId =
-            querySnapshot.docs.first.id; // Get the document ID dynamically
+        String docId = querySnapshot.docs.first.id;
 
         await fireStore
             .collection('availableStock')
@@ -340,19 +332,15 @@ class HomeScreenController extends GetxController {
       }
 
       SuccessSnackbar.show(title: success, message: itemDispatchedSuccessfully);
+      Navigator.pop(context);
 
-      // Reset fields
-      nameC.clear();
-      serialNoC.clear();
       costC.clear();
       quantityC.clear();
-      modelC.clear();
       conditionC.clear();
       selectedItem.value = '';
       selectedDate.value = '';
       itemSelectIndex.value = -1;
       dispatchC.clear();
-
     } catch (e) {
       ErrorSnackbar.show(title: failed, message: "Failed to add item: $e");
       print(e.toString());
