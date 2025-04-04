@@ -62,8 +62,8 @@ class UpdatesView extends StatelessWidget {
                 var update = doc.data() as Map<String, dynamic>;
                 final _userEmail = update['userEmail'];
                 return GestureDetector(
-                  onLongPress:
-                      () => _showDeleteDialog(context, doc.id, _userEmail),
+                  onLongPress: () => _showDeleteDialog(context, doc.id, update['userId']),
+
                   child: UpdateCard(
                     title: update['title'] ?? 'No Title',
                     message: update['message'] ?? 'No Message',
@@ -83,49 +83,46 @@ class UpdatesView extends StatelessWidget {
     );
   }
 
-  void _showDeleteDialog(BuildContext context, String docId, var userEmail) {
+  void _showDeleteDialog(BuildContext context, String docId, String updateUserId) {
     showDialog(
       context: context,
-      builder:
-          (context) => AlertDialog(
-           backgroundColor: kBlack,
-            title: const Text("Delete Update",style: TextStyle(color: kWhite),),
-            content: const Text("Are you sure you want to delete this update?",style: TextStyle(color: kWhite),),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text("Cancel",style: TextStyle(color: kWhite),),
-              ),
-              TextButton(
-                onPressed: () async {
-                  final user = await FirebaseAuth.instance.currentUser!.email;
-                  if (user == userEmail) {
-                    await FirebaseFirestore.instance
-                        .collection('updates')
-                        .doc(docId)
-                        .delete();
-                    Navigator.pop(context);
-
-                    SuccessSnackbar.show(
-                      title: success,
-                      message: 'Update successfully deleted',
-                    );
-                  } else {
-                    Navigator.pop(context);
-
-                    ErrorSnackbar.show(
-                      title: failed,
-                      message: 'Something went wrong',
-                    );
-                  }
-                },
-                child: const Text(
-                  "Delete",
-                  style: TextStyle(color: Colors.red),
-                ),
-              ),
-            ],
+      builder: (context) => AlertDialog(
+        backgroundColor: kBlack,
+        title: const Text("Delete Update", style: TextStyle(color: kWhite)),
+        content: const Text("Are you sure you want to delete this update?", style: TextStyle(color: kWhite)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Cancel", style: TextStyle(color: kWhite)),
           ),
+          TextButton(
+            onPressed: () async {
+              final currentUser = FirebaseAuth.instance.currentUser;
+              if (currentUser != null && currentUser.uid == updateUserId) {
+                await FirebaseFirestore.instance
+                    .collection('updates')
+                    .doc(docId)
+                    .delete();
+                Navigator.pop(context);
+
+                SuccessSnackbar.show(
+                  title: success,
+                  message: 'Update successfully deleted',
+                );
+              } else {
+                Navigator.pop(context);
+
+                ErrorSnackbar.show(
+                  title: failed,
+                  message: 'You can only delete your own updates!',
+                );
+              }
+            },
+            child: const Text("Delete", style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
     );
   }
+
 }
