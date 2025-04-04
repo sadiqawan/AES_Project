@@ -1,4 +1,5 @@
 const appName = 'A Z O U R E';
+const appTitle = 'AZOURE';
 const login = 'Log In';
 const signUp = 'Sign Up';
 const register = 'Register';

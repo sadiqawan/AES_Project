@@ -1,3 +1,4 @@
+import 'package:ase/constant/cont_text.dart';
 import 'package:ase/ui/mobile_ui/splash_view/splash_view.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
       builder: (context, orientation, screenType) {
         return GetMaterialApp(
           debugShowCheckedModeBanner: false,
-          title: 'ASE',
+          title: appTitle,
           theme: ThemeData(
             fontFamily: GoogleFonts.poppins().fontFamily,
             scaffoldBackgroundColor: kWhite,

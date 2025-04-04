@@ -8,7 +8,6 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:path_provider/path_provider.dart';
 import 'package:printing/printing.dart';
 import 'package:universal_html/html.dart' as html;
-
 import '../../../../../../constant/cont_colors.dart';
 
 class StockSummaryView extends StatefulWidget {
@@ -28,72 +27,75 @@ class _StockSummaryViewState extends State<StockSummaryView> {
 
       pdf.addPage(
         pw.Page(
-          build: (pw.Context context) => pw.Column(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-              pw.Text(
-                'Stock Summary Report',
-                style: pw.TextStyle(
-                  fontSize: 16,
-                  fontWeight: pw.FontWeight.bold,
-                  decoration: pw.TextDecoration.underline,
-                ),
-              ),
-              pw.SizedBox(height: 10),
-              pw.TableHelper.fromTextArray(
-                headers: [
-                  'Index',
-                  'Type',
-                  'S.No',
-                  'Model',
-                  'Name',
-                  'Status',
-                  'QC',
-                  'Cost',
-                  'AddedBy',
-                  'Date',
+          build:
+              (pw.Context context) => pw.Column(
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                children: [
+                  pw.Text(
+                    'Stock Summary Report',
+                    style: pw.TextStyle(
+                      fontSize: 16,
+                      fontWeight: pw.FontWeight.bold,
+                      decoration: pw.TextDecoration.underline,
+                    ),
+                  ),
+                  pw.SizedBox(height: 10),
+                  pw.TableHelper.fromTextArray(
+                    headers: [
+                      'Index',
+                      'Type',
+                      'S.No',
+                      'Model',
+                      'Name',
+                      'Status',
+                      'QC',
+                      'Cost',
+                      'AddedBy',
+                      'Date',
+                    ],
+                    headerDecoration: pw.BoxDecoration(
+                      color: PdfColors.grey300,
+                    ),
+                    headerStyle: pw.TextStyle(
+                      fontSize: 10,
+                      fontWeight: pw.FontWeight.bold,
+                    ),
+                    cellStyle: pw.TextStyle(fontSize: 9),
+                    data: List.generate(historyData.length, (index) {
+                      var data = historyData[index];
+                      return [
+                        '${index + 1}',
+                        data['itemType'] ?? 'N/A',
+                        data['serialNo'] ?? 'N/A',
+                        data['modelNo'] ?? 'N/A',
+                        data['itemName'] ?? 'N/A',
+                        data['condition'] ?? 'N/A',
+                        data['itemQuantity'].toString(),
+                        data['itemCost'].toString(),
+                        data['entryBy'] ?? 'N/A',
+                        data['entryDate'] ?? 'N/A',
+                      ];
+                    }),
+                    border: pw.TableBorder.all(
+                      color: PdfColors.black,
+                      width: 0.5,
+                    ),
+                    cellAlignment: pw.Alignment.centerLeft,
+                    columnWidths: {
+                      0: pw.FixedColumnWidth(30),
+                      1: pw.FixedColumnWidth(50),
+                      2: pw.FixedColumnWidth(40),
+                      3: pw.FixedColumnWidth(50),
+                      4: pw.FixedColumnWidth(50),
+                      5: pw.FixedColumnWidth(50),
+                      6: pw.FixedColumnWidth(40),
+                      7: pw.FixedColumnWidth(40),
+                      8: pw.FixedColumnWidth(60),
+                      9: pw.FixedColumnWidth(60),
+                    },
+                  ),
                 ],
-                headerDecoration: pw.BoxDecoration(color: PdfColors.grey300),
-                headerStyle: pw.TextStyle(
-                  fontSize: 10,
-                  fontWeight: pw.FontWeight.bold,
-                ),
-                cellStyle: pw.TextStyle(fontSize: 9),
-                data: List.generate(historyData.length, (index) {
-                  var data = historyData[index];
-                  return [
-                    '${index + 1}',
-                    data['itemType'] ?? 'N/A',
-                    data['serialNo'] ?? 'N/A',
-                    data['modelNo'] ?? 'N/A',
-                    data['itemName'] ?? 'N/A',
-                    data['condition'] ?? 'N/A',
-                    data['itemQuantity'].toString(),
-                    data['itemCost'].toString(),
-                    data['entryBy'] ?? 'N/A',
-                    data['entryDate'] ?? 'N/A',
-                  ];
-                }),
-                border: pw.TableBorder.all(
-                  color: PdfColors.black,
-                  width: 0.5,
-                ),
-                cellAlignment: pw.Alignment.centerLeft,
-                columnWidths: {
-                  0: pw.FixedColumnWidth(30),
-                  1: pw.FixedColumnWidth(50),
-                  2: pw.FixedColumnWidth(40),
-                  3: pw.FixedColumnWidth(50),
-                  4: pw.FixedColumnWidth(50),
-                  5: pw.FixedColumnWidth(50),
-                  6: pw.FixedColumnWidth(40),
-                  7: pw.FixedColumnWidth(40),
-                  8: pw.FixedColumnWidth(60),
-                  9: pw.FixedColumnWidth(60),
-                },
               ),
-            ],
-          ),
         ),
       );
 
@@ -103,9 +105,10 @@ class _StockSummaryViewState extends State<StockSummaryView> {
         // Web: Download the file using a Blob
         final blob = html.Blob([pdfBytes], 'application/pdf');
         final url = html.Url.createObjectUrlFromBlob(blob);
-        final anchor = html.AnchorElement(href: url)
-          ..setAttribute('download', 'Stock_Summary.pdf')
-          ..click();
+        final anchor =
+            html.AnchorElement(href: url)
+              ..setAttribute('download', 'Stock_Summary.pdf')
+              ..click();
         html.Url.revokeObjectUrl(url);
       } else {
         // Mobile/Desktop: Save the file locally
@@ -137,9 +140,6 @@ class _StockSummaryViewState extends State<StockSummaryView> {
     }
   }
 
-
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -164,43 +164,47 @@ class _StockSummaryViewState extends State<StockSummaryView> {
 
           historyData = snapshot.data!.docs;
 
-          return SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: DataTable(
-                columnSpacing: 15,
-                columns: const [
-                  DataColumn(label: Text('Index')),
-                  DataColumn(label: Text('Type')),
-                  DataColumn(label: Text('S.No')),
-                  DataColumn(label: Text('Model')),
-                  DataColumn(label: Text('Name')),
-                  DataColumn(label: Text('Condition')),
-                  DataColumn(label: Text('Quantity')),
-                  DataColumn(label: Text('Cost')),
-                  DataColumn(label: Text('Added By')),
-                  DataColumn(label: Text('Date')),
-                ],
-                rows: List.generate(historyData.length, (index) {
-                  var data = historyData[index];
-                  return DataRow(
-                    cells: [
-                      DataCell(Text('${index + 1}')),
-                      DataCell(Text(data['itemType'] ?? 'N/A')),
-                      DataCell(Text(data['serialNo'] ?? 'N/A')),
-                      DataCell(Text(data['modelNo'] ?? 'N/A')),
-                      DataCell(Text(data['itemName'] ?? 'N/A')),
-                      DataCell(Text(data['condition'] ?? 'N/A')),
-                      DataCell(Text(data['itemQuantity'].toString())),
-                      DataCell(Text(data['itemCost'].toString())),
-                      DataCell(Text(data['entryBy'] ?? 'N/A')),
-                      DataCell(Text(data['entryDate'] ?? 'N/A')),
+          return ListView(
+            children: [
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: DataTable(
+                    columnSpacing: 15,
+                    columns: const [
+                      DataColumn(label: Text('Index')),
+                      DataColumn(label: Text('Type')),
+                      DataColumn(label: Text('S.No')),
+                      DataColumn(label: Text('Model')),
+                      DataColumn(label: Text('Name')),
+                      DataColumn(label: Text('Condition')),
+                      DataColumn(label: Text('Quantity')),
+                      DataColumn(label: Text('Cost')),
+                      DataColumn(label: Text('Added By')),
+                      DataColumn(label: Text('Date')),
                     ],
-                  );
-                }),
+                    rows: List.generate(historyData.length, (index) {
+                      var data = historyData[index];
+                      return DataRow(
+                        cells: [
+                          DataCell(Text('${index + 1}')),
+                          DataCell(Text(data['itemType'] ?? 'N/A')),
+                          DataCell(Text(data['serialNo'] ?? 'N/A')),
+                          DataCell(Text(data['modelNo'] ?? 'N/A')),
+                          DataCell(Text(data['itemName'] ?? 'N/A')),
+                          DataCell(Text(data['condition'] ?? 'N/A')),
+                          DataCell(Text(data['itemQuantity'].toString())),
+                          DataCell(Text(data['itemCost'].toString())),
+                          DataCell(Text(data['entryBy'] ?? 'N/A')),
+                          DataCell(Text(data['entryDate'] ?? 'N/A')),
+                        ],
+                      );
+                    }),
+                  ),
+                ),
               ),
-            ),
+            ],
           );
         },
       ),
