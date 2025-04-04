@@ -39,11 +39,11 @@ Widget _screen(BuildContext context) {
                     Center(
                       child: Container(
                         decoration: BoxDecoration(
-                          color: kBlack,
+
                           shape: BoxShape.circle,
                           image: DecorationImage(
                             image: AssetImage('assets/images/logo_01.png'),
-                            fit: BoxFit.cover,
+                            fit: BoxFit.fill,
                           ),
                           border: Border.all(color: kBlack, width: 5),
                         ),
@@ -141,11 +141,11 @@ Widget _screen(BuildContext context) {
                       ? Center(
                     child: Container(
                       decoration: BoxDecoration(
-                        color: kBlack,
+
                         shape: BoxShape.circle,
                         image: DecorationImage(
                           image: AssetImage('assets/images/logo_01.png'),
-                          fit: BoxFit.cover,
+                          fit: BoxFit.fill,
                         ),
                         border: Border.all(color: kBlack, width: 5),
                       ),
